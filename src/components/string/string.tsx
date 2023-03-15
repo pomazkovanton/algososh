@@ -4,33 +4,45 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { DELAY_IN_MS, SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { delay } from "../../utils/utils";
+import { ElementStates } from "../../types/element-states";
 
 export const StringComponent: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
   const [arrChars, setArrChars] = useState<string[]>([]);
-  const [isReverseString, setIsReverseString] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [startIndex, setStarIndex] = useState(-1);
+  const [endIndex, setEndIndex] = useState(12);
 
   const reverseString = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsReverseString(false);
+
     setIsLoading(true);
-    setArrChars(valueInput.split(""));
 
     const tempArray = valueInput.split("");
     const lengthArray = tempArray.length;
+    await delay(SHORT_DELAY_IN_MS);
 
     for (let i = 0; i < lengthArray / 2; i++) {
-      const tmp = tempArray[i];
-      tempArray[i] = tempArray[lengthArray - i - 1];
-      tempArray[lengthArray - i - 1] = tmp;
+      const startIndex = i;
+      const endIndex = lengthArray - i - 1;
+
+      setArrChars(tempArray);
+      setStarIndex(startIndex);
+      setEndIndex(endIndex);
+
+      await delay(DELAY_IN_MS);
+
+      const tmp = tempArray[startIndex];
+      tempArray[startIndex] = tempArray[endIndex];
+      tempArray[endIndex] = tmp;
     }
 
+    setStarIndex(-1);
+    setEndIndex(12);
     setArrChars(tempArray);
     setValueInput(tempArray.join(""));
-    setIsReverseString(true);
     setIsLoading(false);
   };
 
@@ -40,6 +52,7 @@ export const StringComponent: React.FC = () => {
         <Input
           maxLength={11}
           isLimitText={true}
+          value={valueInput}
           onChange={(e) => setValueInput(e.currentTarget.value)}
         />
         <Button
@@ -50,15 +63,27 @@ export const StringComponent: React.FC = () => {
         />
       </form>
       <ul className={cls.list}>
-        {isReverseString &&
-          arrChars &&
-          arrChars.map((char, index) => {
+        {arrChars.map((char, index) => {
+          if (index === startIndex || index === endIndex) {
+            return (
+              <li key={index}>
+                <Circle letter={char} state={ElementStates.Changing} />
+              </li>
+            );
+          } else if (index < startIndex || index > endIndex) {
+            return (
+              <li key={index}>
+                <Circle letter={char} state={ElementStates.Modified} />
+              </li>
+            );
+          } else if (index > startIndex || index < endIndex) {
             return (
               <li key={index}>
                 <Circle letter={char} />
               </li>
             );
-          })}
+          }
+        })}
       </ul>
     </SolutionLayout>
   );
