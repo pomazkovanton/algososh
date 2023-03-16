@@ -60,6 +60,7 @@ export const StringComponent: React.FC = () => {
           type="submit"
           disabled={!valueInput}
           isLoader={isLoading}
+          style={{ minWidth: "178px" }}
         />
       </form>
       <ul className={cls.list}>
