@@ -33,5 +33,6 @@
   align-items: end;
   gap: 10px;
   max-width: 1010px;
+  min-height: 340px;
   margin: 50px auto 0;
 }

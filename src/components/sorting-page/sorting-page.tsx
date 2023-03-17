@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cls from "./sorting-page.module.css";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { RadioInput } from "../ui/radio-input/radio-input";
@@ -6,15 +6,18 @@ import { Direction } from "../../types/direction";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
 import { ElementStates } from "../../types/element-states";
+import { randomArr } from "../../utils/utils";
 
 export const SortingPage: React.FC = () => {
-  const [randomNumbers, setRandomNumbers] = useState([
-    12, 3, 14, 67, 3, 2, 45, 12, 3, 14, 67, 3, 2, 45, 3, 2, 45,
-  ]);
+  const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [radioBtnsValue, setRadioSelect] = useState({
     select: true,
     bubble: false,
   });
+
+  useEffect(() => {
+    randomNewArray();
+  }, []);
 
   const changeSelectButton = () => {
     setRadioSelect({ select: true, bubble: false });
@@ -22,6 +25,10 @@ export const SortingPage: React.FC = () => {
 
   const changeBubbleButton = () => {
     setRadioSelect({ select: false, bubble: true });
+  };
+
+  const randomNewArray = () => {
+    setRandomNumbers(randomArr());
   };
 
   return (
@@ -72,7 +79,7 @@ export const SortingPage: React.FC = () => {
             <Button
               text="Новый массив"
               style={{ minWidth: "205px" }}
-              onClick={() => console.log("Click")}
+              onClick={randomNewArray}
             />
           </li>
         </ul>
