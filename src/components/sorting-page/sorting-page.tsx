@@ -21,10 +21,12 @@ export const SortingPage: React.FC = () => {
     newArrayBtn: false,
     ascendingBtn: false,
     descendingBtn: false,
+    bubbleRadioBtn: false,
+    selectRadioBtn: false,
   });
   const [isSortedArray, setIsSortedArray] = useState(false);
-  const [startIndex, setStarIndex] = useState(-1);
-  const [endIndex, setEndIndex] = useState(18);
+  const [startIndex, setStarIndex] = useState<number | null>(null);
+  const [endIndex, setEndIndex] = useState<number | null>(null);
   const [stepsCount, setStepsCount] = useState(18)
   const [radioBtnsValue, setRadioSelect] = useState({
     select: true,
@@ -45,88 +47,99 @@ export const SortingPage: React.FC = () => {
 
   const randomNewArray = () => {
     setIsSortedArray(false);
+    setEndIndex(null);
+    setStarIndex(null);
     setStepsCount(18);
     setRandomNumbers(randomArr());
+    
   };
 
-  const ascendingBubbleSort = async () => {
-    setIsLoading({ ...isLoading, ascendingBtn: true });
-    setIsActive({ ...isActive, descendingBtn: true, newArrayBtn: true });
-    const arr = randomNumbers;
-    let stepsCount = arr.length - 1;
-    let swapped;
-    do {
-      swapped = false;
-      for (let i = 0; i < stepsCount; i += 1) {
-        if (arr[i] > arr[i + 1]) {
+  const selectorSort  = async (arr: number[], method: TMethod) => {
+    for (let i = 0; i < arr.length; i++) {
+      let indexMin = i;
+      for (let j = i; j < arr.length; j++) {
+        if (method === "ascending" ? arr[indexMin] > arr[j] : arr[indexMin] < arr[j]) {
           await delay(SHORT_DELAY_IN_MS);
-          const temp = arr[i];
-          arr[i] = arr[i + 1];
-          arr[i + 1] = temp;
-          swapped = true;
+          [arr[j], arr[indexMin]] = [arr[indexMin], arr[j]];
           setRandomNumbers(arr);
-          setStarIndex(i);
-          setEndIndex(i + 1);
+          setStarIndex(j);
+          setEndIndex(indexMin);
         }
       }
-      stepsCount -= 1;
-    } while (swapped);
-    setStarIndex(-1);
+    }
+    setStarIndex(null);
     setEndIndex(18);
-    setIsActive({ ...isActive, descendingBtn: false, newArrayBtn: false });
-    setIsLoading({ ...isLoading, ascendingBtn: false });
-  };
+    setStepsCount(-1)
+  }
 
   const bubbleSort = async (arr: number[], method: TMethod) => {
     let steps = arr.length;
     for (let j = 0; j < arr.length; j++) {
       steps--;
       for (let i = 0; i < arr.length - 1 - j; i++) {
-          await delay(SHORT_DELAY_IN_MS);
+        await delay(SHORT_DELAY_IN_MS);
         if (method === "ascending" ? arr[i] > arr[i + 1] : arr[i] < arr[i + 1]) {
           let temp = arr[i];
           arr[i] = arr[i + 1];
           arr[i + 1] = temp;
         }
-          setRandomNumbers(arr);
+        setRandomNumbers(arr);
         setStepsCount(steps);
-          setStarIndex(i);
-          setEndIndex(i + 1);
-        }
+        setStarIndex(i);
+        setEndIndex(i + 1);
       }
-    setStarIndex(-1);
-    setEndIndex(18);
+    }
+    setStarIndex(null);
+    setEndIndex(null);
   }
+
+  const ascendingSelectSort = async (method: TMethod) => {
+    setIsLoading({ ...isLoading, ascendingBtn: true });
+    setIsActive({ ...isActive, descendingBtn: true, newArrayBtn: true, bubbleRadioBtn: true });
+    const arr = randomNumbers;
+    await selectorSort(arr, method);
+    setIsActive({ ...isActive, descendingBtn: false, newArrayBtn: false, bubbleRadioBtn: false });
+    setIsLoading({ ...isLoading, ascendingBtn: false });
+  };
+
+  const descendingSelectSort = async (method: TMethod) => {
+    setIsLoading({ ...isLoading, descendingBtn: true });
+    setIsActive({ ...isActive, ascendingBtn: true, newArrayBtn: true, bubbleRadioBtn: true });
+    const arr = randomNumbers;
+    await selectorSort(arr, method);
+    setIsActive({ ...isActive, ascendingBtn: false, newArrayBtn: false, bubbleRadioBtn: false });
+    setIsLoading({ ...isLoading, descendingBtn: false });
+  };
 
   const ascendingbubbleSort = async (method: TMethod) => {
     setIsLoading({ ...isLoading, ascendingBtn: true });
-    setIsActive({ ...isActive, descendingBtn: true, newArrayBtn: true });
+    setIsActive({ ...isActive, descendingBtn: true, newArrayBtn: true, selectRadioBtn: true });
     setIsSortedArray(false);
     const arr = randomNumbers;
     await bubbleSort(arr, method);
-    setIsActive({ ...isActive, descendingBtn: false, newArrayBtn: false });
+    setIsActive({ ...isActive, descendingBtn: false, newArrayBtn: false, selectRadioBtn: false });
     setIsLoading({ ...isLoading, ascendingBtn: false });
     setIsSortedArray(true);
   };
 
   const descendingBubbleSort = async (method: TMethod) => {
     setIsLoading({ ...isLoading, descendingBtn: true });
-    setIsActive({ ...isActive, ascendingBtn: true, newArrayBtn: true });
+    setIsActive({ ...isActive, ascendingBtn: true, newArrayBtn: true, selectRadioBtn: true });
     setIsSortedArray(false);
     const arr = randomNumbers;
     await bubbleSort(arr, method);
-    setIsActive({ ...isActive, ascendingBtn: false, newArrayBtn: false });
+    setIsActive({ ...isActive, ascendingBtn: false, newArrayBtn: false, selectRadioBtn: false  });
     setIsLoading({ ...isLoading, descendingBtn: false });
     setIsSortedArray(true);
   };
 
   const handleClickAscendingBtn = () => {
-    if (radioBtnsValue.select) ascendingSelectSort();
+    if (radioBtnsValue.select) ascendingSelectSort("ascending");
     if (radioBtnsValue.bubble) ascendingbubbleSort("ascending");
   };
 
   const handleClickDescendingBtn = () => {
-    if (radioBtnsValue.select) console.log("select descending");
+    if (radioBtnsValue.select) descendingSelectSort("descending");
     if (radioBtnsValue.bubble) descendingBubbleSort("descending");
   };
 
@@ -139,6 +152,7 @@ export const SortingPage: React.FC = () => {
               label="Выбор"
               name="type"
               value="selection"
+              disabled={isActive.selectRadioBtn}
               onChange={changeSelectButton}
               checked={radioBtnsValue.select}
             />
@@ -148,6 +162,7 @@ export const SortingPage: React.FC = () => {
               label="Пузырёк"
               name="type"
               value="bubble"
+              disabled={isActive.bubbleRadioBtn}
               onChange={changeBubbleButton}
               checked={radioBtnsValue.bubble}
             />
@@ -202,7 +217,7 @@ export const SortingPage: React.FC = () => {
             return (
               <Column key={index} index={num} state={ElementStates.Changing} />
             );
-          } else if (index > stepsCount) {
+          } else if ((radioBtnsValue.bubble && index > stepsCount) || (endIndex && radioBtnsValue.select && index < endIndex)) {
             return (
               <Column key={index} index={num} state={ElementStates.Modified} />
             );
