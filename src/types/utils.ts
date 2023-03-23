@@ -5,3 +5,5 @@ export type TQueue = {
   head: number;
   tail: number;
 };
+
+export type TQueueStatus = "enqueue" | "dequeue" | "clear" | null;
