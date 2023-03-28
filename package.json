@@ -31,7 +31,7 @@
     "format:fix": "npm run format -- --write",
     "lint:es": "eslint --ext .js,.jsx,.ts,.tsx src",
     "lint:es:fix": "npm run lint:es -- --fix",
-    "lint:css": "stylelint src",
+    "lint:css": "stylelint src/**/*.css",
     "lint:css:fix": "npm run lint:css -- --fix"
   },
   "eslintConfig": {
