@@ -7,3 +7,5 @@ export type TQueue = {
 };
 
 export type TQueueStatus = "enqueue" | "dequeue" | "clear" | null;
+
+export type TListStatus = "add-in-head" | "add-in-tail" | null;

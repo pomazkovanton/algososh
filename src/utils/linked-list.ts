@@ -12,6 +12,7 @@ type ILinkedList<T> = {
   prepend(data: T): void;
   fromArray(array: Array<T>): void;
   toArray(): Node<T>[];
+  getSize(): number; 
 };
 
 export class LinkedList<T> implements ILinkedList<T> {
@@ -62,5 +63,9 @@ export class LinkedList<T> implements ILinkedList<T> {
       currentNode = currentNode.next;
     }
     return nodes;
+  }
+
+  getSize() {
+    return this.size;
   }
 }
