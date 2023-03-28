@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 import cls from "./fibonacci-page.module.css";
 
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { delay } from "../../utils/utils";
 import { Button } from "../ui/button/button";
+import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Circle } from "../ui/circle/circle";
-import { delay } from "../../utils/utils";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const FibonacciPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
@@ -36,7 +36,7 @@ export const FibonacciPage: React.FC = () => {
   };
 
   return (
-    <SolutionLayout title="Последовательность Фибоначчи">
+    <SolutionLayout title='Последовательность Фибоначчи'>
       <form className={cls.form} onSubmit={(e) => generateFibonacci(e)}>
         <Input
           min={1}
@@ -47,8 +47,8 @@ export const FibonacciPage: React.FC = () => {
           onChange={(e) => setValueInput(e.currentTarget.value)}
         />
         <Button
-          text="Рассчитать"
-          type="submit"
+          text='Рассчитать'
+          type='submit'
           disabled={!valueInput}
           isLoader={isLoading}
           style={{ minWidth: "178px" }}

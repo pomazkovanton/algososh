@@ -1,11 +1,12 @@
 .header {
-  max-width: 952px;
-  max-height: 158px;
-  margin: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   align-content: space-between;
+
+  max-width: 952px;
+  max-height: 158px;
+  margin: auto;
 }
 
 .header div {
@@ -13,16 +14,17 @@
 }
 
 .list {
-  padding: 0;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+
   max-width: 952px;
   margin: 120px auto 0;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
+  padding: 0;
 }
 
 .item {
   display: flex;
-  align-items: center;
   gap: 16px;
+  align-items: center;
 }

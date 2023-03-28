@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+
 import cls from "./queue-page.module.css";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { TQueue, TQueueStatus } from "../../types/utils";
-import { Circle } from "../ui/circle/circle";
-import { ElementStates } from "../../types/element-states";
-import { delay } from "../../utils/utils";
+
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { ElementStates } from "../../types/element-states";
+import { TQueue, TQueueStatus } from "../../types/utils";
+import { delay } from "../../utils/utils";
+import { Button } from "../ui/button/button";
+import { Circle } from "../ui/circle/circle";
+import { Input } from "../ui/input/input";
+import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const QueuePage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
@@ -83,18 +85,13 @@ export const QueuePage: React.FC = () => {
   };
 
   return (
-    <SolutionLayout title="Очередь">
+    <SolutionLayout title='Очередь'>
       <div className={cls.header}>
         <form className={cls.form} onSubmit={(e) => enqueue(e, valueInput)}>
-          <Input
-            maxLength={4}
-            isLimitText
-            value={valueInput}
-            onChange={(e) => setValueInput(e.currentTarget.value)}
-          />
+          <Input maxLength={4} isLimitText value={valueInput} onChange={(e) => setValueInput(e.currentTarget.value)} />
           <Button
-            text="Добавить"
-            type="submit"
+            text='Добавить'
+            type='submit'
             isLoader={isLoading.addBtn}
             disabled={valueInput === "" || queue.tail >= 6 || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
@@ -103,21 +100,16 @@ export const QueuePage: React.FC = () => {
         <ul className={cls.list}>
           <li>
             <Button
-              text="Удалить"
+              text='Удалить'
               style={{ minWidth: "110px" }}
               isLoader={isLoading.deleteBtn}
               onClick={dequeue}
-              disabled={
-                isDisabled.deleteBtn ||
-                queue.tail < 0 ||
-                queue.head > 6 ||
-                queue.items[queue.head] === ""
-              }
+              disabled={isDisabled.deleteBtn || queue.tail < 0 || queue.head > 6 || queue.items[queue.head] === ""}
             />
           </li>
           <li>
             <Button
-              text="Очистить"
+              text='Очистить'
               style={{ minWidth: "120px" }}
               isLoader={isLoading.clearBtn}
               onClick={clear}

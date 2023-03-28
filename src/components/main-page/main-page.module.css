@@ -1,12 +1,14 @@
 .content {
-  background-image: url("../../images/bg.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100vh;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  height: 100%;
+  min-height: 100vh;
+
+  background-image: url("../../images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .container {
@@ -16,8 +18,9 @@
 
 .title_box {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
   width: 1280px;
   margin: 0 auto;
 }
@@ -28,28 +31,32 @@
 }
 
 .fibonacci_title {
-  display: inline-block;
-  writing-mode: vertical-lr;
   transform: rotate(180deg);
+  display: inline-block;
   margin-left: -6px;
+  writing-mode: vertical-lr;
 }
 
 .cards_box {
   display: grid;
-  grid-template-rows: 1fr 1fr;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
   gap: 20px;
+  align-self: center;
+
   max-width: 1240px;
   margin: 34px 0 64px;
-  align-self: center;
 }
 
 .card {
+  cursor: pointer;
+
   width: 400px;
   height: 220px;
-  cursor: pointer;
-  transition: var(--common-transition);
+
   border-radius: 20px;
+
+  transition: var(--common-transition);
 }
 
 .string {
@@ -101,9 +108,9 @@
 }
 
 .ticker {
-  background-color: var(--text-color-h1);
-  height: 60px;
   overflow: hidden;
+  height: 60px;
+  background-color: var(--text-color-h1);
 }
 
 .dot_box {
@@ -114,14 +121,15 @@
 .dot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
   background-color: var(--text-color-secondary);
+  border-radius: 50%;
 }
 
 .copyright {
-  margin: 28px auto 0;
-  text-align: right;
-  padding-bottom: 18px;
-  max-width: 1240px;
   min-width: 1240px;
+  max-width: 1240px;
+  margin: 28px auto 0;
+  padding-bottom: 18px;
+
+  text-align: right;
 }

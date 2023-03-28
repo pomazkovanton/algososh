@@ -1,11 +1,14 @@
 .button {
+  cursor: pointer;
+
   display: flex;
   align-items: center;
+
+  background: none;
   border: none;
   outline: none;
-  background: none;
+
   transition: var(--common-transition);
-  cursor: pointer;
 }
 
 .button:hover {

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+
 import cls from "./string.module.css";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
+
+import { DELAY_IN_MS, SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { ElementStates } from "../../types/element-states";
+import { delay } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
-import { DELAY_IN_MS, SHORT_DELAY_IN_MS } from "../../constants/delays";
-import { delay } from "../../utils/utils";
-import { ElementStates } from "../../types/element-states";
+import { Input } from "../ui/input/input";
+import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const StringComponent: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
@@ -47,7 +49,7 @@ export const StringComponent: React.FC = () => {
   };
 
   return (
-    <SolutionLayout title="Строка">
+    <SolutionLayout title='Строка'>
       <form className={cls.form} onSubmit={(e) => reverseString(e)}>
         <Input
           maxLength={11}
@@ -56,8 +58,8 @@ export const StringComponent: React.FC = () => {
           onChange={(e) => setValueInput(e.currentTarget.value)}
         />
         <Button
-          text="Развернуть"
-          type="submit"
+          text='Развернуть'
+          type='submit'
           disabled={!valueInput}
           isLoader={isLoading}
           style={{ minWidth: "178px" }}
@@ -83,6 +85,8 @@ export const StringComponent: React.FC = () => {
                 <Circle letter={char} />
               </li>
             );
+          } else {
+            return null;
           }
         })}
       </ul>

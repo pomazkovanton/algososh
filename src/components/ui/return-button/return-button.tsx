@@ -7,18 +7,11 @@ interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   extraClass?: string;
 }
 
-export const ReturnButton: React.FC<ButtonProps> = ({
-  extraClass = "",
-  ...rest
-}) => {
+export const ReturnButton: React.FC<ButtonProps> = ({ extraClass = "", ...rest }) => {
   return (
-    <button
-      className={`${styles.button} ${extraClass}`}
-      type="button"
-      {...rest}
-    >
+    <button className={`${styles.button} ${extraClass}`} type='button' {...rest}>
       <ReturnIcon />
-      <p className="text text_type_button text_color_link ml-4">К оглавлению</p>
+      <p className='text text_type_button text_color_link ml-4'>К оглавлению</p>
     </button>
   );
 };

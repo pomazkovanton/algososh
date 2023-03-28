@@ -4,12 +4,12 @@
 
 .btns_box {
   display: grid;
+  grid-template: auto;
   grid-template-areas:
     "btn1 btn2"
     "btn3 btn3";
-  grid-template-rows: auto auto;
-  grid-template-columns: auto auto;
   gap: 12px;
+
   max-width: 362px;
 }
 
@@ -27,6 +27,6 @@
 
 .circlex_box {
   display: flex;
-  align-items: center;
   gap: 5px;
+  align-items: center;
 }

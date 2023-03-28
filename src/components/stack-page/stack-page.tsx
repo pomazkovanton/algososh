@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
 import cls from "./stack-page.module.css";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { Circle } from "../ui/circle/circle";
+
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
 import { delay } from "../../utils/utils";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { Button } from "../ui/button/button";
+import { Circle } from "../ui/circle/circle";
+import { Input } from "../ui/input/input";
+import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const StackPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
@@ -24,10 +26,7 @@ export const StackPage: React.FC = () => {
     clearBtn: false,
   });
 
-  const pushStack = async (
-    e: React.FormEvent<HTMLFormElement>,
-    item: string
-  ) => {
+  const pushStack = async (e: React.FormEvent<HTMLFormElement>, item: string) => {
     e.preventDefault();
     if (stack.length > 19) {
       return alert("Ошибка. Превышено число элементов (не более 20)");
@@ -68,18 +67,13 @@ export const StackPage: React.FC = () => {
   };
 
   return (
-    <SolutionLayout title="Стек">
+    <SolutionLayout title='Стек'>
       <div className={cls.header}>
         <form className={cls.form} onSubmit={(e) => pushStack(e, valueInput)}>
-          <Input
-            maxLength={4}
-            isLimitText
-            value={valueInput}
-            onChange={(e) => setValueInput(e.currentTarget.value)}
-          />
+          <Input maxLength={4} isLimitText value={valueInput} onChange={(e) => setValueInput(e.currentTarget.value)} />
           <Button
-            text="Добавить"
-            type="submit"
+            text='Добавить'
+            type='submit'
             isLoader={isLoading.addBtn}
             disabled={valueInput === "" || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
@@ -88,7 +82,7 @@ export const StackPage: React.FC = () => {
         <ul className={cls.list}>
           <li>
             <Button
-              text="Удалить"
+              text='Удалить'
               style={{ minWidth: "110px" }}
               isLoader={isLoading.deleteBtn}
               onClick={popStack}
@@ -97,7 +91,7 @@ export const StackPage: React.FC = () => {
           </li>
           <li>
             <Button
-              text="Очистить"
+              text='Очистить'
               style={{ minWidth: "120px" }}
               isLoader={isLoading.clearBtn}
               onClick={clearStack}
@@ -115,11 +109,7 @@ export const StackPage: React.FC = () => {
                 letter={el}
                 index={index}
                 head={index === stack.length - 1 ? "top" : ""}
-                state={
-                  index === stack.length - 1 || isClearStack
-                    ? colorCircle
-                    : ElementStates.Default
-                }
+                state={index === stack.length - 1 || isClearStack ? colorCircle : ElementStates.Default}
               />
             );
           })}

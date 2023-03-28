@@ -1,39 +1,45 @@
 .header {
   display: flex;
+  gap: 12px;
   justify-content: space-between;
+
   max-width: 830px;
   margin: auto;
-  gap: 12px;
 }
 
 .form {
   display: flex;
-  justify-content: space-between;
   flex: 1;
-  max-width: 510px;
   gap: 12px;
+  justify-content: space-between;
+
+  max-width: 510px;
 }
 
 .list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex: 1;
   display: flex;
+  flex: 1;
   justify-content: space-between;
+
   max-width: 307px;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
 }
 
 .stack {
-  list-style: none;
-  padding: 0;
-  margin: 80px auto 0;
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  justify-content: center;
-  max-width: 944px;
   gap: 12px;
-  min-height: 238px;
   align-content: space-between;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 944px;
+  min-height: 238px;
+  margin: 80px auto 0;
+  padding: 0;
+
+  list-style: none;
 }

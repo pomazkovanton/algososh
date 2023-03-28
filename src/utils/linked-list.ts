@@ -12,7 +12,7 @@ type ILinkedList<T> = {
   prepend(data: T): void;
   fromArray(array: Array<T>): void;
   toArray(): Node<T>[];
-  getSize(): number; 
+  getSize(): number;
 };
 
 export class LinkedList<T> implements ILinkedList<T> {

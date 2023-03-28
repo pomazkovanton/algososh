@@ -1,20 +1,22 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+
 import cls from "./list-page.module.css";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { LinkedList } from "../../utils/linked-list";
-import { Circle } from "../ui/circle/circle";
-import { ElementStates } from "../../types/element-states";
-import { ArrowIcon } from "../ui/icons/arrow-icon";
-import { delay } from "../../utils/utils";
+
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { ElementStates } from "../../types/element-states";
 import { TListStatus } from "../../types/utils";
+import { LinkedList } from "../../utils/linked-list";
+import { delay } from "../../utils/utils";
+import { Button } from "../ui/button/button";
+import { Circle } from "../ui/circle/circle";
+import { ArrowIcon } from "../ui/icons/arrow-icon";
+import { Input } from "../ui/input/input";
+import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 const initValueList = ["0", "34", "8", "1"];
 
 export const ListPage: React.FC = () => {
-  const [valuesInput, setValuesInput] = useState({data: "", index: ""});
+  const [valuesInput, setValuesInput] = useState({ data: "", index: "" });
   const [linkedList, setLinkedList] = useState<string[]>([]);
   const [status, setStatus] = useState<TListStatus>(null);
   const [isLoading, setIsLoading] = useState({
@@ -48,9 +50,7 @@ export const ListPage: React.FC = () => {
     setColorCircle(ElementStates.Default);
   };
 
-  const getValuesList = (
-    list: React.MutableRefObject<LinkedList<string>>
-  ): string[] => {
+  const getValuesList = (list: React.MutableRefObject<LinkedList<string>>): string[] => {
     const listNodes = list.current.toArray();
     const arrayListValues: string[] = [];
     listNodes.forEach((el) => arrayListValues.push(el.data));
@@ -58,32 +58,36 @@ export const ListPage: React.FC = () => {
   };
 
   const addToHead = async () => {
-    if (list.current.getSize() >= 7) return alert("Превышен лимит списка!")
-    setIsLoading({...isLoading, addInHeadBtn: true});
-    setIsDisabled({...isDisabled, 
+    if (list.current.getSize() >= 7) return alert("Превышен лимит списка!");
+    setIsLoading({ ...isLoading, addInHeadBtn: true });
+    setIsDisabled({
+      ...isDisabled,
       addInTailBtn: true,
       removeFromHeadBtn: true,
       removeFromTailBtn: true,
       addByIndexBtn: true,
-      removeByIndexBtn: true,})
+      removeByIndexBtn: true,
+    });
     setStatus("add-in-head");
     await delay(SHORT_DELAY_IN_MS);
     setStatus(null);
     list.current.prepend(valuesInput.data);
     setLinkedList(getValuesList(list));
     await changeColorCircle(SHORT_DELAY_IN_MS);
-    setValuesInput({...valuesInput, data: ""});
-    setIsLoading({...isLoading, addInHeadBtn: false});
-    setIsDisabled({...isDisabled, 
+    setValuesInput({ ...valuesInput, data: "" });
+    setIsLoading({ ...isLoading, addInHeadBtn: false });
+    setIsDisabled({
+      ...isDisabled,
       addInTailBtn: false,
       removeFromHeadBtn: false,
       removeFromTailBtn: false,
       addByIndexBtn: false,
-      removeByIndexBtn: false,})
+      removeByIndexBtn: false,
+    });
   };
 
   return (
-    <SolutionLayout title="Связный список">
+    <SolutionLayout title='Связный список'>
       <div className={cls.header}>
         <Input
           maxLength={4}
@@ -91,35 +95,55 @@ export const ListPage: React.FC = () => {
           placeholder={"Введите значение"}
           style={{ minWidth: "204px" }}
           value={valuesInput.data}
-          onChange={(e) => setValuesInput({...valuesInput, data: e.currentTarget.value})}
+          onChange={(e) => setValuesInput({ ...valuesInput, data: e.currentTarget.value })}
         />
         <Button
-          text="Добавить в head"
+          text='Добавить в head'
           style={{ minWidth: "175px" }}
           disabled={isDisabled.addInHeadBtn || valuesInput.data === ""}
           isLoader={isLoading.addInHeadBtn}
           onClick={addToHead}
         />
-        <Button text="Добавить в tail" style={{ minWidth: "175px" }} disabled={isDisabled.addInTailBtn || valuesInput.data === ""}
-          isLoader={isLoading.addInTailBtn}/>
-        <Button text="Удалить из head" style={{ minWidth: "175px" }} disabled={isDisabled.removeFromHeadBtn}
-          isLoader={isLoading.removeFromHeadBtn}/>
-        <Button text="Удалить из tail" style={{ minWidth: "175px" }} disabled={isDisabled.removeFromTailBtn}
-          isLoader={isLoading.removeFromTailBtn}/>
+        <Button
+          text='Добавить в tail'
+          style={{ minWidth: "175px" }}
+          disabled={isDisabled.addInTailBtn || valuesInput.data === ""}
+          isLoader={isLoading.addInTailBtn}
+        />
+        <Button
+          text='Удалить из head'
+          style={{ minWidth: "175px" }}
+          disabled={isDisabled.removeFromHeadBtn}
+          isLoader={isLoading.removeFromHeadBtn}
+        />
+        <Button
+          text='Удалить из tail'
+          style={{ minWidth: "175px" }}
+          disabled={isDisabled.removeFromTailBtn}
+          isLoader={isLoading.removeFromTailBtn}
+        />
         <Input
           min={0}
           max={10}
           maxLength={2}
-          type="number"
+          type='number'
           value={valuesInput.index}
           style={{ minWidth: "204px" }}
           placeholder={"Введите индекс"}
-          onChange={(e) => setValuesInput({...valuesInput, index: e.currentTarget.value})}
+          onChange={(e) => setValuesInput({ ...valuesInput, index: e.currentTarget.value })}
         />
-        <Button text="Добавить по индексу" style={{ minWidth: "362px" }} disabled={isDisabled.addByIndexBtn || valuesInput.data === "" || valuesInput.index === ""}
-          isLoader={isLoading.addByIndexBtn} />
-        <Button text="Удалить по индексу" style={{ minWidth: "362px" }} disabled={isDisabled.removeByIndexBtn || valuesInput.index === ""}
-          isLoader={isLoading.removeByIndexBtn}/>
+        <Button
+          text='Добавить по индексу'
+          style={{ minWidth: "362px" }}
+          disabled={isDisabled.addByIndexBtn || valuesInput.data === "" || valuesInput.index === ""}
+          isLoader={isLoading.addByIndexBtn}
+        />
+        <Button
+          text='Удалить по индексу'
+          style={{ minWidth: "362px" }}
+          disabled={isDisabled.removeByIndexBtn || valuesInput.index === ""}
+          isLoader={isLoading.removeByIndexBtn}
+        />
       </div>
       <ul className={cls.list}>
         {linkedList.map((el, index) => {
@@ -133,11 +157,7 @@ export const ListPage: React.FC = () => {
                 head={
                   index === 0 ? (
                     status === "add-in-head" ? (
-                      <Circle
-                        isSmall={true}
-                        letter={valuesInput.data}
-                        state={ElementStates.Changing}
-                      />
+                      <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />
                     ) : (
                       "head"
                     )
@@ -146,9 +166,7 @@ export const ListPage: React.FC = () => {
                   )
                 }
               />
-              {linkedList.length > 1 && index !== linkedList.length - 1 && (
-                <ArrowIcon />
-              )}
+              {linkedList.length > 1 && index !== linkedList.length - 1 && <ArrowIcon />}
             </div>
           );
         })}
