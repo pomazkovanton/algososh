@@ -35,7 +35,7 @@ export const ListPage: React.FC = () => {
     addByIndexBtn: false,
     removeByIndexBtn: false,
   });
-  const [colorCircle, setColorCircle] = useState(ElementStates.Default);
+  const [colorCircle, setColorCircle] = useState({ head: ElementStates.Default, tail: ElementStates.Default });
   const list = useRef() as MutableRefObject<LinkedList<string>>;
 
   useEffect(() => {
@@ -44,10 +44,16 @@ export const ListPage: React.FC = () => {
     setLinkedList(getValuesList(list));
   }, []);
 
-  const changeColorCircle = async (ms: number) => {
-    setColorCircle(ElementStates.Modified);
-    await delay(ms);
-    setColorCircle(ElementStates.Default);
+  const changeColorCircle = async (ms: number, part: "head" | "tail") => {
+    if (part === "head") {
+      setColorCircle({ ...colorCircle, head: ElementStates.Modified });
+      await delay(ms);
+      setColorCircle({ ...colorCircle, head: ElementStates.Default });
+    } else {
+      setColorCircle({ ...colorCircle, tail: ElementStates.Modified });
+      await delay(ms);
+      setColorCircle({ ...colorCircle, tail: ElementStates.Default });
+    }
   };
 
   const getValuesList = (list: React.MutableRefObject<LinkedList<string>>): string[] => {
@@ -73,12 +79,41 @@ export const ListPage: React.FC = () => {
     setStatus(null);
     list.current.prepend(valuesInput.data);
     setLinkedList(getValuesList(list));
-    await changeColorCircle(SHORT_DELAY_IN_MS);
+    await changeColorCircle(SHORT_DELAY_IN_MS, "head");
     setValuesInput({ ...valuesInput, data: "" });
     setIsLoading({ ...isLoading, addInHeadBtn: false });
     setIsDisabled({
       ...isDisabled,
       addInTailBtn: false,
+      removeFromHeadBtn: false,
+      removeFromTailBtn: false,
+      addByIndexBtn: false,
+      removeByIndexBtn: false,
+    });
+  };
+
+  const addToTail = async () => {
+    if (list.current.getSize() >= 7) return alert("Превышен лимит списка!");
+    setIsLoading({ ...isLoading, addInTailBtn: true });
+    setIsDisabled({
+      ...isDisabled,
+      addInHeadBtn: true,
+      removeFromHeadBtn: true,
+      removeFromTailBtn: true,
+      addByIndexBtn: true,
+      removeByIndexBtn: true,
+    });
+    setStatus("add-in-tail");
+    await delay(SHORT_DELAY_IN_MS);
+    setStatus(null);
+    list.current.append(valuesInput.data);
+    setLinkedList(getValuesList(list));
+    await changeColorCircle(SHORT_DELAY_IN_MS, "tail");
+    setValuesInput({ ...valuesInput, data: "" });
+    setIsLoading({ ...isLoading, addInTailBtn: false });
+    setIsDisabled({
+      ...isDisabled,
+      addInHeadBtn: false,
       removeFromHeadBtn: false,
       removeFromTailBtn: false,
       addByIndexBtn: false,
@@ -109,6 +144,7 @@ export const ListPage: React.FC = () => {
           style={{ minWidth: "175px" }}
           disabled={isDisabled.addInTailBtn || valuesInput.data === ""}
           isLoader={isLoading.addInTailBtn}
+          onClick={addToTail}
         />
         <Button
           text='Удалить из head'
@@ -149,23 +185,30 @@ export const ListPage: React.FC = () => {
         {linkedList.map((el, index) => {
           return (
             <div className={cls.item} key={index}>
-              <Circle
-                letter={el}
-                index={index}
-                state={index === 0 ? colorCircle : ElementStates.Default}
-                tail={index === linkedList.length - 1 ? "tail" : ""}
-                head={
-                  index === 0 ? (
-                    status === "add-in-head" ? (
+              {
+                <Circle
+                  letter={el}
+                  index={index}
+                  state={
+                    index === 0
+                      ? colorCircle.head
+                      : index === linkedList.length - 1
+                      ? colorCircle.tail
+                      : ElementStates.Default
+                  }
+                  tail={index === linkedList.length - 1 ? "tail" : ""}
+                  head={
+                    (status === "add-in-head" && index === 0) ||
+                    (status === "add-in-tail" && index === linkedList.length - 1) ? (
                       <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />
-                    ) : (
+                    ) : index === 0 ? (
                       "head"
+                    ) : (
+                      ""
                     )
-                  ) : (
-                    ""
-                  )
-                }
-              />
+                  }
+                />
+              }
               {linkedList.length > 1 && index !== linkedList.length - 1 && <ArrowIcon />}
             </div>
           );
