@@ -11,6 +11,7 @@ type ILinkedList<T> = {
   append(data: T): void;
   prepend(data: T): void;
   fromArray(array: Array<T>): void;
+  deleteHead(): Node<T> | null;
   toArray(): Node<T>[];
   getSize(): number;
 };
@@ -48,6 +49,22 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
     this.size++;
     return this;
+  }
+
+  deleteHead() {
+    if (!this.head) {
+      return null;
+    }
+    const deletedHead = this.head;
+
+    if (this.head.next) {
+      this.head = this.head.next;
+    } else {
+      this.head = null;
+      this.tail = null;
+    }
+    this.size--;
+    return deletedHead;
   }
 
   fromArray(values: Array<T>) {

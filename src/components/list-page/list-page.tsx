@@ -121,6 +121,32 @@ export const ListPage: React.FC = () => {
     });
   };
 
+  const removeFromHead = async () => {
+    setIsLoading({ ...isLoading, removeFromHeadBtn: true });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: true,
+      addInHeadBtn: true,
+      removeFromTailBtn: true,
+      addByIndexBtn: true,
+      removeByIndexBtn: true,
+    });
+    setStatus("remove-from-head");
+    await delay(SHORT_DELAY_IN_MS);
+    setStatus(null);
+    list.current.deleteHead();
+    setLinkedList(getValuesList(list));
+    setIsLoading({ ...isLoading, removeFromHeadBtn: false });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: false,
+      addInHeadBtn: false,
+      removeFromTailBtn: false,
+      addByIndexBtn: false,
+      removeByIndexBtn: false,
+    });
+  };
+
   return (
     <SolutionLayout title='Связный список'>
       <div className={cls.header}>
@@ -149,13 +175,14 @@ export const ListPage: React.FC = () => {
         <Button
           text='Удалить из head'
           style={{ minWidth: "175px" }}
-          disabled={isDisabled.removeFromHeadBtn}
+          disabled={isDisabled.removeFromHeadBtn || linkedList.length === 0}
           isLoader={isLoading.removeFromHeadBtn}
+          onClick={removeFromHead}
         />
         <Button
           text='Удалить из tail'
           style={{ minWidth: "175px" }}
-          disabled={isDisabled.removeFromTailBtn}
+          disabled={isDisabled.removeFromTailBtn || linkedList.length === 0}
           isLoader={isLoading.removeFromTailBtn}
         />
         <Input
@@ -187,7 +214,7 @@ export const ListPage: React.FC = () => {
             <div className={cls.item} key={index}>
               {
                 <Circle
-                  letter={el}
+                  letter={status === "remove-from-head" && index === 0 ? "" : el}
                   index={index}
                   state={
                     index === 0
@@ -196,7 +223,15 @@ export const ListPage: React.FC = () => {
                       ? colorCircle.tail
                       : ElementStates.Default
                   }
-                  tail={index === linkedList.length - 1 ? "tail" : ""}
+                  tail={
+                    index === linkedList.length - 1 ? (
+                      "tail"
+                    ) : "" || (index === 0 && status === "remove-from-head") ? (
+                      <Circle isSmall={true} letter={el} state={ElementStates.Changing} />
+                    ) : (
+                      ""
+                    )
+                  }
                   head={
                     (status === "add-in-head" && index === 0) ||
                     (status === "add-in-tail" && index === linkedList.length - 1) ? (
