@@ -147,6 +147,114 @@ export const ListPage: React.FC = () => {
     });
   };
 
+  const removeFromTail = async () => {
+    setIsLoading({ ...isLoading, removeFromTailBtn: true });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: true,
+      addInHeadBtn: true,
+      removeFromHeadBtn: true,
+      addByIndexBtn: true,
+      removeByIndexBtn: true,
+    });
+    setStatus("remove-from-tail");
+    await delay(SHORT_DELAY_IN_MS);
+    setStatus(null);
+    list.current.deleteTail();
+    setLinkedList(getValuesList(list));
+    setIsLoading({ ...isLoading, removeFromTailBtn: false });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: false,
+      addInHeadBtn: false,
+      removeFromHeadBtn: false,
+      addByIndexBtn: false,
+      removeByIndexBtn: false,
+    });
+  };
+
+  const headRenderingCondition = (indexItem: number, status: TListStatus) => {
+    switch (indexItem) {
+      case 0:
+        switch (status) {
+          case "add-in-head":
+            return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
+          default:
+            return "head";
+        }
+      case linkedList.length - 1:
+        switch (status) {
+          case "add-in-head":
+            return "";
+          case "add-in-tail":
+            return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
+        }
+        break;
+      default:
+        return "";
+    }
+  };
+
+  const tailRenderingCondition = (indexItem: number, status: TListStatus, el: string) => {
+    if (list.current.getSize() === 1) {
+      if (status === "remove-from-tail" || status === "remove-from-head") {
+        return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
+      } else {
+        return "tail";
+      }
+    }
+    switch (indexItem) {
+      case 0:
+        switch (status) {
+          case "remove-from-head":
+            return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
+          default:
+            return "";
+        }
+      case linkedList.length - 1:
+        switch (status) {
+          case "remove-from-tail":
+            return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
+          default:
+            return "tail";
+        }
+      default:
+        return "";
+    }
+  };
+
+  const letterRenderingCondition = (indexItem: number, status: TListStatus, el: string) => {
+    switch (indexItem) {
+      case 0:
+        switch (status) {
+          case "remove-from-head":
+            return "";
+          default:
+            return el;
+        }
+      case linkedList.length - 1:
+        switch (status) {
+          case "remove-from-tail":
+            return "";
+          default:
+            return el;
+        }
+      default:
+        return el;
+    }
+  };
+
+  const colorRenderingCondition = (indexItem: number) => {
+    switch (indexItem) {
+      case 0:
+        return colorCircle.head;
+      case linkedList.length - 1:
+        return colorCircle.tail;
+      default:
+        return ElementStates.Default;
+    }
+  };
+
   return (
     <SolutionLayout title='Связный список'>
       <div className={cls.header}>
@@ -184,6 +292,7 @@ export const ListPage: React.FC = () => {
           style={{ minWidth: "175px" }}
           disabled={isDisabled.removeFromTailBtn || linkedList.length === 0}
           isLoader={isLoading.removeFromTailBtn}
+          onClick={removeFromTail}
         />
         <Input
           min={0}
@@ -214,34 +323,11 @@ export const ListPage: React.FC = () => {
             <div className={cls.item} key={index}>
               {
                 <Circle
-                  letter={status === "remove-from-head" && index === 0 ? "" : el}
+                  letter={letterRenderingCondition(index, status, el)}
                   index={index}
-                  state={
-                    index === 0
-                      ? colorCircle.head
-                      : index === linkedList.length - 1
-                      ? colorCircle.tail
-                      : ElementStates.Default
-                  }
-                  tail={
-                    index === linkedList.length - 1 ? (
-                      "tail"
-                    ) : "" || (index === 0 && status === "remove-from-head") ? (
-                      <Circle isSmall={true} letter={el} state={ElementStates.Changing} />
-                    ) : (
-                      ""
-                    )
-                  }
-                  head={
-                    (status === "add-in-head" && index === 0) ||
-                    (status === "add-in-tail" && index === linkedList.length - 1) ? (
-                      <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />
-                    ) : index === 0 ? (
-                      "head"
-                    ) : (
-                      ""
-                    )
-                  }
+                  state={colorRenderingCondition(index)}
+                  tail={tailRenderingCondition(index, status, el)}
+                  head={headRenderingCondition(index, status)}
                 />
               }
               {linkedList.length > 1 && index !== linkedList.length - 1 && <ArrowIcon />}
