@@ -65,6 +65,7 @@ export const ListPage: React.FC = () => {
 
   const addToHead = async () => {
     if (list.current.getSize() >= 7) return alert("Превышен лимит списка!");
+    if (list.current.getSize() === 0) setLinkedList([""]);
     setIsLoading({ ...isLoading, addInHeadBtn: true });
     setIsDisabled({
       ...isDisabled,
@@ -94,6 +95,7 @@ export const ListPage: React.FC = () => {
 
   const addToTail = async () => {
     if (list.current.getSize() >= 7) return alert("Превышен лимит списка!");
+    if (list.current.getSize() === 0) setLinkedList([""]);
     setIsLoading({ ...isLoading, addInTailBtn: true });
     setIsDisabled({
       ...isDisabled,
@@ -174,6 +176,13 @@ export const ListPage: React.FC = () => {
   };
 
   const headRenderingCondition = (indexItem: number, status: TListStatus) => {
+    if (list.current.getSize() <= 1) {
+      if (status === "add-in-head" || status === "add-in-tail") {
+        return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
+      } else {
+        return "head";
+      }
+    }
     switch (indexItem) {
       case 0:
         switch (status) {
