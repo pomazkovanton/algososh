@@ -14,12 +14,14 @@ export const StringComponent: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
   const [arrChars, setArrChars] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isReverse, setIsReverse] = useState(false);
   const [startIndex, setStarIndex] = useState(-1);
   const [endIndex, setEndIndex] = useState(12);
 
   const reverseString = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsReverse(false);
     setIsLoading(true);
 
     const tempArray = valueInput.split("");
@@ -44,8 +46,9 @@ export const StringComponent: React.FC = () => {
     setStarIndex(-1);
     setEndIndex(12);
     setArrChars(tempArray);
-    setValueInput(tempArray.join(""));
+    setValueInput("");
     setIsLoading(false);
+    setIsReverse(true);
   };
 
   return (
@@ -73,7 +76,7 @@ export const StringComponent: React.FC = () => {
                 <Circle letter={char} state={ElementStates.Changing} />
               </li>
             );
-          } else if (index < startIndex || index > endIndex) {
+          } else if (index < startIndex || index > endIndex || isReverse) {
             return (
               <li key={index}>
                 <Circle letter={char} state={ElementStates.Modified} />
