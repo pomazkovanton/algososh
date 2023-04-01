@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import cls from "./stack-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
+import { Stack } from "../../utils/stack";
 import { delay } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
@@ -12,7 +13,7 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const StackPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
-  const [stack, setStack] = useState<string[]>([]);
+  const [stackState, setStackState] = useState<string[]>([]);
   const [colorCircle, setColorCircle] = useState(ElementStates.Default);
   const [isClearStack, setIsClearStack] = useState(false);
   const [isLoading, setIsLoading] = useState({
@@ -25,16 +26,23 @@ export const StackPage: React.FC = () => {
     deleteBtn: false,
     clearBtn: false,
   });
+  const stack = useRef() as MutableRefObject<Stack<string>>;
+
+  useEffect(() => {
+    stack.current = new Stack<string>();
+    setStackState(stack.current.container);
+  }, []);
 
   const pushStack = async (e: React.FormEvent<HTMLFormElement>, item: string) => {
     e.preventDefault();
-    if (stack.length > 19) {
+    if (stack.current.getSize() > 9) {
       return alert("Ошибка. Превышено число элементов (не более 20)");
     }
     setIsLoading({ ...isLoading, addBtn: true });
     setIsDisabled({ ...isDisabled, deleteBtn: true, clearBtn: true });
     setColorCircle(ElementStates.Changing);
-    setStack((stack) => [...stack, item]);
+    stack.current.push(item);
+    setStackState(stack.current.container);
     setValueInput("");
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
@@ -48,7 +56,8 @@ export const StackPage: React.FC = () => {
     setColorCircle(ElementStates.Changing);
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
-    setStack((stack) => [...stack.slice(0, stack.length - 1)]);
+    stack.current.pop();
+    setStackState(stack.current.container);
     setIsLoading({ ...isLoading, deleteBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, clearBtn: false });
   };
@@ -60,7 +69,8 @@ export const StackPage: React.FC = () => {
     setColorCircle(ElementStates.Changing);
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
-    setStack([]);
+    stack.current.clear();
+    setStackState(stack.current.container);
     setIsClearStack(false);
     setIsLoading({ ...isLoading, clearBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, deleteBtn: false });
@@ -86,7 +96,7 @@ export const StackPage: React.FC = () => {
               style={{ minWidth: "110px" }}
               isLoader={isLoading.deleteBtn}
               onClick={popStack}
-              disabled={stack.length === 0 || isDisabled.deleteBtn}
+              disabled={stackState.length === 0 || isDisabled.deleteBtn}
             />
           </li>
           <li>
@@ -95,21 +105,21 @@ export const StackPage: React.FC = () => {
               style={{ minWidth: "120px" }}
               isLoader={isLoading.clearBtn}
               onClick={clearStack}
-              disabled={stack.length === 0 || isDisabled.clearBtn}
+              disabled={stackState.length === 0 || isDisabled.clearBtn}
             />
           </li>
         </ul>
       </div>
       <ul className={cls.stack}>
         {stack &&
-          stack.map((el, index) => {
+          stackState.map((el, index) => {
             return (
               <Circle
                 key={index}
                 letter={el}
                 index={index}
-                head={index === stack.length - 1 ? "top" : ""}
-                state={index === stack.length - 1 || isClearStack ? colorCircle : ElementStates.Default}
+                head={index === stackState.length - 1 ? "top" : ""}
+                state={index === stackState.length - 1 || isClearStack ? colorCircle : ElementStates.Default}
               />
             );
           })}
