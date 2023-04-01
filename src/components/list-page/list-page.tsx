@@ -21,6 +21,7 @@ export const ListPage: React.FC = () => {
   const [linkedList, setLinkedList] = useState<string[]>([]);
   const [status, setStatus] = useState<TListStatus>(null);
   const [stepProgress, setStepProgress] = useState(-1);
+  const [isRemoved, setIsRemoved] = useState(false);
   const [isLoading, setIsLoading] = useState({
     addInHeadBtn: false,
     addInTailBtn: false,
@@ -81,7 +82,7 @@ export const ListPage: React.FC = () => {
     list.current.prepend(valuesInput.data);
     setLinkedList(getValuesList(list));
     await changeColorCircle(SHORT_DELAY_IN_MS, HEAD);
-    setValuesInput({ ...valuesInput, data: "" });
+    setValuesInput({ index: "", data: "" });
     setIsLoading({ ...isLoading, addInHeadBtn: false });
     setIsDisabled({
       ...isDisabled,
@@ -209,6 +210,41 @@ export const ListPage: React.FC = () => {
     });
   };
 
+  const removeByIndex = async () => {
+    if (list.current.getSize() <= Number(valuesInput.index)) {
+      setValuesInput({ ...valuesInput, index: "" });
+      return alert("Такого индекса нет в списке");
+    }
+    setIsLoading({ ...isLoading, removeByIndexBtn: true });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: true,
+      addInHeadBtn: true,
+      removeFromHeadBtn: true,
+      removeFromTailBtn: true,
+      addByIndexBtn: true,
+    });
+    setStatus("remove-by-index");
+    await renderProgress();
+    setIsRemoved(true);
+    await delay(SHORT_DELAY_IN_MS);
+    setIsRemoved(false);
+    list.current.removeByPosition(Number(valuesInput.index));
+    setLinkedList(getValuesList(list));
+    setStatus(null);
+    setValuesInput({ ...valuesInput, index: "" });
+    setStepProgress(-1);
+    setIsLoading({ ...isLoading, removeByIndexBtn: false });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: false,
+      addInHeadBtn: false,
+      removeFromHeadBtn: false,
+      removeFromTailBtn: false,
+      addByIndexBtn: false,
+    });
+  };
+
   const renderProgress = async () => {
     let step = -1;
     while (step < +valuesInput.index) {
@@ -252,6 +288,10 @@ export const ListPage: React.FC = () => {
         if (list.current.getSize() <= 1) return CIRCLE;
         if (indexItem === linkedList.length - 1) return CIRCLE;
         break;
+      case "remove-by-index":
+        if (indexItem === Number(valuesInput.index) && isRemoved) return CIRCLE;
+        if (indexItem === linkedList.length - 1) return TAIL;
+        break;
       default:
         if (indexItem === linkedList.length - 1) return TAIL;
         return "";
@@ -266,6 +306,9 @@ export const ListPage: React.FC = () => {
       case "remove-from-tail":
         if (indexItem === linkedList.length - 1) return "";
         return el;
+      case "remove-by-index":
+        if (indexItem === Number(valuesInput.index) && isRemoved) return "";
+        return el;
       default:
         return el;
     }
@@ -274,7 +317,10 @@ export const ListPage: React.FC = () => {
   const colorRenderingCondition = (indexItem: number, status: TListStatus) => {
     switch (status) {
       case "add-by-index":
-        if (indexItem < stepProgress) return ElementStates.Changing;
+        if (indexItem < stepProgress + 1) return ElementStates.Changing;
+        break;
+      case "remove-by-index":
+        if (indexItem <= stepProgress) return ElementStates.Changing;
         break;
       default:
         if (indexItem === stepProgress) return colorCircle.byPosition;
@@ -345,6 +391,7 @@ export const ListPage: React.FC = () => {
           style={{ minWidth: "362px" }}
           disabled={isDisabled.removeByIndexBtn || valuesInput.index === ""}
           isLoader={isLoading.removeByIndexBtn}
+          onClick={removeByIndex}
         />
       </div>
       <ul className={cls.list}>

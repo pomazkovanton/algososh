@@ -13,6 +13,7 @@ type ILinkedList<T> = {
   deleteHead(): Node<T> | null;
   deleteTail(): Node<T> | null;
   insertInPosition(position: number, data: T): void;
+  removeByPosition(position: number): void;
   fromArray(array: Array<T>): void;
   toArray(): Node<T>[];
   getSize(): number;
@@ -121,6 +122,31 @@ export class LinkedList<T> implements ILinkedList<T> {
       }
       this.size++;
     }
+  }
+
+  removeByPosition(position: number) {
+    if (position < 0 || position > this.size) {
+      return;
+    }
+
+    let current = this.head;
+
+    if (position === 0 && current) {
+      this.head = current.next;
+    } else {
+      let prev = null;
+      let index = 0;
+
+      while (index < position && current) {
+        prev = current;
+        current = current.next;
+        index++;
+      }
+
+      if (prev && current) prev.next = current.next;
+    }
+
+    this.size--;
   }
 
   fromArray(values: Array<T>) {

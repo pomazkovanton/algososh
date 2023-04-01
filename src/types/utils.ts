@@ -14,4 +14,5 @@ export type TListStatus =
   | "remove-from-head"
   | "remove-from-tail"
   | "add-by-index"
+  | "remove-by-index"
   | null;
