@@ -10,9 +10,10 @@ export class Node<T> {
 type ILinkedList<T> = {
   append(data: T): void;
   prepend(data: T): void;
-  fromArray(array: Array<T>): void;
   deleteHead(): Node<T> | null;
   deleteTail(): Node<T> | null;
+  insertInPosition(position: number, data: T): void;
+  fromArray(array: Array<T>): void;
   toArray(): Node<T>[];
   getSize(): number;
 };
@@ -92,6 +93,34 @@ export class LinkedList<T> implements ILinkedList<T> {
     this.tail = currentNode;
     this.size--;
     return deletedTail;
+  }
+
+  insertInPosition(position: number, data: T) {
+    if (position < 0 || position > this.size) {
+      return;
+    }
+
+    let node = new Node(data);
+
+    if (position === 0) {
+      this.append(data);
+    } else {
+      let current = this.head;
+      let prev = null;
+      let index = 0;
+
+      while (index < position) {
+        prev = current;
+        current = current?.next || null;
+        index++;
+      }
+
+      if (prev) {
+        prev.next = node;
+        node.next = current;
+      }
+      this.size++;
+    }
   }
 
   fromArray(values: Array<T>) {

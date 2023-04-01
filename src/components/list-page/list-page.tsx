@@ -3,6 +3,7 @@ import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import cls from "./list-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { HEAD, TAIL } from "../../constants/element-captions";
 import { ElementStates } from "../../types/element-states";
 import { TListStatus } from "../../types/utils";
 import { LinkedList } from "../../utils/linked-list";
@@ -19,6 +20,7 @@ export const ListPage: React.FC = () => {
   const [valuesInput, setValuesInput] = useState({ data: "", index: "" });
   const [linkedList, setLinkedList] = useState<string[]>([]);
   const [status, setStatus] = useState<TListStatus>(null);
+  const [stepProgress, setStepProgress] = useState(-1);
   const [isLoading, setIsLoading] = useState({
     addInHeadBtn: false,
     addInTailBtn: false,
@@ -35,7 +37,11 @@ export const ListPage: React.FC = () => {
     addByIndexBtn: false,
     removeByIndexBtn: false,
   });
-  const [colorCircle, setColorCircle] = useState({ head: ElementStates.Default, tail: ElementStates.Default });
+  const [colorCircle, setColorCircle] = useState({
+    head: ElementStates.Default,
+    tail: ElementStates.Default,
+    byPosition: ElementStates.Default,
+  });
   const list = useRef() as MutableRefObject<LinkedList<string>>;
 
   useEffect(() => {
@@ -44,16 +50,10 @@ export const ListPage: React.FC = () => {
     setLinkedList(getValuesList(list));
   }, []);
 
-  const changeColorCircle = async (ms: number, part: "head" | "tail") => {
-    if (part === "head") {
-      setColorCircle({ ...colorCircle, head: ElementStates.Modified });
-      await delay(ms);
-      setColorCircle({ ...colorCircle, head: ElementStates.Default });
-    } else {
-      setColorCircle({ ...colorCircle, tail: ElementStates.Modified });
-      await delay(ms);
-      setColorCircle({ ...colorCircle, tail: ElementStates.Default });
-    }
+  const changeColorCircle = async (ms: number, part: "head" | "tail" | "byPosition") => {
+    setColorCircle({ ...colorCircle, [part]: ElementStates.Modified });
+    await delay(ms);
+    setColorCircle({ ...colorCircle, [part]: ElementStates.Default });
   };
 
   const getValuesList = (list: React.MutableRefObject<LinkedList<string>>): string[] => {
@@ -80,7 +80,7 @@ export const ListPage: React.FC = () => {
     setStatus(null);
     list.current.prepend(valuesInput.data);
     setLinkedList(getValuesList(list));
-    await changeColorCircle(SHORT_DELAY_IN_MS, "head");
+    await changeColorCircle(SHORT_DELAY_IN_MS, HEAD);
     setValuesInput({ ...valuesInput, data: "" });
     setIsLoading({ ...isLoading, addInHeadBtn: false });
     setIsDisabled({
@@ -110,7 +110,7 @@ export const ListPage: React.FC = () => {
     setStatus(null);
     list.current.append(valuesInput.data);
     setLinkedList(getValuesList(list));
-    await changeColorCircle(SHORT_DELAY_IN_MS, "tail");
+    await changeColorCircle(SHORT_DELAY_IN_MS, TAIL);
     setValuesInput({ ...valuesInput, data: "" });
     setIsLoading({ ...isLoading, addInTailBtn: false });
     setIsDisabled({
@@ -175,91 +175,111 @@ export const ListPage: React.FC = () => {
     });
   };
 
-  const headRenderingCondition = (indexItem: number, status: TListStatus) => {
-    if (list.current.getSize() <= 1) {
-      if (status === "add-in-head" || status === "add-in-tail") {
-        return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
-      } else {
-        return "head";
-      }
+  const addByIndex = async () => {
+    if (list.current.getSize() <= Number(valuesInput.index)) {
+      setValuesInput({ ...valuesInput, index: "" });
+      return alert("Такого индекса нет в списке");
     }
-    switch (indexItem) {
-      case 0:
-        switch (status) {
-          case "add-in-head":
-            return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
-          default:
-            return "head";
-        }
-      case linkedList.length - 1:
-        switch (status) {
-          case "add-in-head":
-            return "";
-          case "add-in-tail":
-            return <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
-        }
+    if (Number(valuesInput.index) === 0) return addToHead();
+    setIsLoading({ ...isLoading, addByIndexBtn: true });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: true,
+      addInHeadBtn: true,
+      removeFromHeadBtn: true,
+      removeFromTailBtn: true,
+      removeByIndexBtn: true,
+    });
+    setStatus("add-by-index");
+    await renderProgress();
+    setStatus(null);
+    list.current.insertInPosition(Number(valuesInput.index), valuesInput.data);
+    setLinkedList(getValuesList(list));
+    await changeColorCircle(SHORT_DELAY_IN_MS, "byPosition");
+    setValuesInput({ index: "", data: "" });
+    setStepProgress(-1);
+    setIsLoading({ ...isLoading, addByIndexBtn: false });
+    setIsDisabled({
+      ...isDisabled,
+      addInTailBtn: false,
+      addInHeadBtn: false,
+      removeFromHeadBtn: false,
+      removeFromTailBtn: false,
+      removeByIndexBtn: false,
+    });
+  };
+
+  const renderProgress = async () => {
+    let step = -1;
+    while (step < +valuesInput.index) {
+      await delay(SHORT_DELAY_IN_MS);
+      step++;
+      setStepProgress(step);
+    }
+  };
+
+  const headRenderingCondition = (indexItem: number, status: TListStatus) => {
+    const CIRCLE = <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
+    switch (status) {
+      case "add-in-head":
+        if (list.current.getSize() <= 1) return CIRCLE;
+        if (indexItem === 0) return CIRCLE;
+        break;
+      case "add-in-tail":
+        if (list.current.getSize() <= 1) return CIRCLE;
+        if (indexItem === 0) return HEAD;
+        if (indexItem === linkedList.length - 1) return CIRCLE;
+        break;
+      case "add-by-index":
+        if (indexItem === stepProgress) return CIRCLE;
+        if (indexItem === 0) return HEAD;
         break;
       default:
+        if (indexItem === 0) return HEAD;
         return "";
     }
   };
 
   const tailRenderingCondition = (indexItem: number, status: TListStatus, el: string) => {
-    if (list.current.getSize() === 1) {
-      if (status === "remove-from-tail" || status === "remove-from-head") {
-        return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
-      } else {
-        return "tail";
-      }
-    }
-    switch (indexItem) {
-      case 0:
-        switch (status) {
-          case "remove-from-head":
-            return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
-          default:
-            return "";
-        }
-      case linkedList.length - 1:
-        switch (status) {
-          case "remove-from-tail":
-            return <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
-          default:
-            return "tail";
-        }
+    const CIRCLE = <Circle isSmall={true} letter={el} state={ElementStates.Changing} />;
+    switch (status) {
+      case "remove-from-head":
+        if (list.current.getSize() <= 1) return CIRCLE;
+        if (indexItem === linkedList.length - 1) return TAIL;
+        if (indexItem === 0) return CIRCLE;
+        break;
+      case "remove-from-tail":
+        if (list.current.getSize() <= 1) return CIRCLE;
+        if (indexItem === linkedList.length - 1) return CIRCLE;
+        break;
       default:
+        if (indexItem === linkedList.length - 1) return TAIL;
         return "";
     }
   };
 
   const letterRenderingCondition = (indexItem: number, status: TListStatus, el: string) => {
-    switch (indexItem) {
-      case 0:
-        switch (status) {
-          case "remove-from-head":
-            return "";
-          default:
-            return el;
-        }
-      case linkedList.length - 1:
-        switch (status) {
-          case "remove-from-tail":
-            return "";
-          default:
-            return el;
-        }
+    switch (status) {
+      case "remove-from-head":
+        if (indexItem === 0) return "";
+        return el;
+      case "remove-from-tail":
+        if (indexItem === linkedList.length - 1) return "";
+        return el;
       default:
         return el;
     }
   };
 
-  const colorRenderingCondition = (indexItem: number) => {
-    switch (indexItem) {
-      case 0:
-        return colorCircle.head;
-      case linkedList.length - 1:
-        return colorCircle.tail;
+  const colorRenderingCondition = (indexItem: number, status: TListStatus) => {
+    switch (status) {
+      case "add-by-index":
+        if (indexItem < stepProgress) return ElementStates.Changing;
+        break;
       default:
+        if (indexItem === stepProgress) return colorCircle.byPosition;
+        if (indexItem === 0) return colorCircle.head;
+        if (indexItem === linkedList.length - 1) return colorCircle.tail;
         return ElementStates.Default;
     }
   };
@@ -318,6 +338,7 @@ export const ListPage: React.FC = () => {
           style={{ minWidth: "362px" }}
           disabled={isDisabled.addByIndexBtn || valuesInput.data === "" || valuesInput.index === ""}
           isLoader={isLoading.addByIndexBtn}
+          onClick={addByIndex}
         />
         <Button
           text='Удалить по индексу'
@@ -334,7 +355,7 @@ export const ListPage: React.FC = () => {
                 <Circle
                   letter={letterRenderingCondition(index, status, el)}
                   index={index}
-                  state={colorRenderingCondition(index)}
+                  state={colorRenderingCondition(index, status)}
                   tail={tailRenderingCondition(index, status, el)}
                   head={headRenderingCondition(index, status)}
                 />

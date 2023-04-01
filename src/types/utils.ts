@@ -8,4 +8,10 @@ export type TQueue = {
 
 export type TQueueStatus = "enqueue" | "dequeue" | "clear" | null;
 
-export type TListStatus = "add-in-head" | "add-in-tail" | "remove-from-head" | "remove-from-tail" | null;
+export type TListStatus =
+  | "add-in-head"
+  | "add-in-tail"
+  | "remove-from-head"
+  | "remove-from-tail"
+  | "add-by-index"
+  | null;
