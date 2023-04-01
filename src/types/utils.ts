@@ -1,7 +1,7 @@
 export type TMethod = "ascending" | "descending";
 
 export type TQueue = {
-  items: string[];
+  items: (string | null)[];
   head: number;
   tail: number;
 };

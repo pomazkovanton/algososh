@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import cls from "./queue-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { HEAD, TAIL } from "../../constants/element-captions";
 import { ElementStates } from "../../types/element-states";
 import { TQueue, TQueueStatus } from "../../types/utils";
+import { Queue } from "../../utils/queue";
 import { delay } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
@@ -13,11 +15,7 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const QueuePage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
-  const [queue, setQueue] = useState<TQueue>({
-    items: new Array(7).fill(""),
-    head: -1,
-    tail: -1,
-  });
+  const [queueState, setQueueState] = useState<TQueue>({ items: [], tail: 0, head: 0 });
   const [isLoading, setIsLoading] = useState({
     addBtn: false,
     deleteBtn: false,
@@ -30,6 +28,12 @@ export const QueuePage: React.FC = () => {
   });
   const [status, setStatus] = useState<TQueueStatus>(null);
   const [colorCircle, setColorCircle] = useState(ElementStates.Default);
+  const queue = useRef() as MutableRefObject<Queue<string>>;
+
+  useEffect(() => {
+    queue.current = new Queue<string>(7);
+    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
+  }, []);
 
   const changeColorCircle = async (ms: number) => {
     setColorCircle(ElementStates.Changing);
@@ -39,18 +43,12 @@ export const QueuePage: React.FC = () => {
 
   const enqueue = async (e: React.FormEvent<HTMLFormElement>, item: string) => {
     e.preventDefault();
-    let { items, tail, head } = queue;
     setStatus("enqueue");
     setIsLoading({ ...isLoading, addBtn: true });
     setIsDisabled({ ...isDisabled, deleteBtn: true, clearBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
-    if (head === tail && head !== -1 && items[head] === "") {
-      head = head + 1;
-    }
-    tail = tail + 1;
-    head = tail === 0 ? head + 1 : head;
-    items[tail] = item;
-    setQueue({ items: items, tail: tail, head: head });
+    queue.current.enqueue(item);
+    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
     setValueInput("");
     setIsLoading({ ...isLoading, addBtn: false });
     setIsDisabled({ ...isDisabled, deleteBtn: false, clearBtn: false });
@@ -58,16 +56,12 @@ export const QueuePage: React.FC = () => {
   };
 
   const dequeue = async () => {
-    let { items, head, tail } = queue;
     setStatus("dequeue");
     setIsLoading({ ...isLoading, deleteBtn: true });
     setIsDisabled({ ...isDisabled, addBtn: true, clearBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
-    items[head] = "";
-    if (head !== tail) {
-      head = head + 1;
-    }
-    setQueue({ ...queue, items: items, head: head });
+    queue.current.dequeue();
+    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
     setIsLoading({ ...isLoading, deleteBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, clearBtn: false });
     setStatus(null);
@@ -78,7 +72,8 @@ export const QueuePage: React.FC = () => {
     setIsLoading({ ...isLoading, clearBtn: true });
     setIsDisabled({ ...isDisabled, addBtn: true, deleteBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
-    setQueue({ items: new Array(7).fill(""), head: -1, tail: -1 });
+    queue.current.clear();
+    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
     setIsLoading({ ...isLoading, clearBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, deleteBtn: false });
     setStatus(null);
@@ -93,7 +88,7 @@ export const QueuePage: React.FC = () => {
             text='Добавить'
             type='submit'
             isLoader={isLoading.addBtn}
-            disabled={valueInput === "" || queue.tail >= 6 || isDisabled.addBtn}
+            disabled={valueInput === "" || queueState.tail >= 7 || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
           />
         </form>
@@ -104,7 +99,12 @@ export const QueuePage: React.FC = () => {
               style={{ minWidth: "110px" }}
               isLoader={isLoading.deleteBtn}
               onClick={dequeue}
-              disabled={isDisabled.deleteBtn || queue.tail < 0 || queue.head > 6 || queue.items[queue.head] === ""}
+              disabled={
+                isDisabled.deleteBtn ||
+                queueState.tail < 0 ||
+                queueState.head > 6 ||
+                queueState.items[queueState.head] === null
+              }
             />
           </li>
           <li>
@@ -113,23 +113,25 @@ export const QueuePage: React.FC = () => {
               style={{ minWidth: "120px" }}
               isLoader={isLoading.clearBtn}
               onClick={clear}
-              disabled={isDisabled.clearBtn || queue.tail < 0}
+              disabled={isDisabled.clearBtn || queueState.tail === 0}
             />
           </li>
         </ul>
       </div>
       <ul className={cls.queue}>
-        {queue.items.map((el, index) => {
+        {queueState.items.map((el, index) => {
           return (
             <Circle
               key={index}
-              letter={el}
+              letter={el || undefined}
               index={index}
-              head={queue.head === index ? "head" : ""}
-              tail={queue.tail === index ? "tail" : ""}
+              head={
+                queueState.head === index || (queueState.head > 6 && index === queueState.items.length - 1) ? HEAD : ""
+              }
+              tail={queueState.tail - 1 === index && queueState.items[queueState.tail - 1] !== null ? TAIL : ""}
               state={
-                (index === queue.tail + 1 && status === "enqueue") ||
-                (index === queue.head && status === "dequeue") ||
+                (index === queueState.tail && status === "enqueue") ||
+                (index === queueState.head && status === "dequeue") ||
                 status === "clear"
                   ? colorCircle
                   : ElementStates.Default
