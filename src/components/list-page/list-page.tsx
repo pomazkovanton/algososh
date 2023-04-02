@@ -382,14 +382,25 @@ export const ListPage: React.FC = () => {
         <Button
           text='Добавить по индексу'
           style={{ minWidth: "362px" }}
-          disabled={isDisabled.addByIndexBtn || valuesInput.data === "" || valuesInput.index === ""}
+          disabled={
+            isDisabled.addByIndexBtn ||
+            valuesInput.data === "" ||
+            valuesInput.index === "" ||
+            Number(valuesInput.index) > linkedList.length - 1 ||
+            Number(valuesInput.index) < 0
+          }
           isLoader={isLoading.addByIndexBtn}
           onClick={addByIndex}
         />
         <Button
           text='Удалить по индексу'
           style={{ minWidth: "362px" }}
-          disabled={isDisabled.removeByIndexBtn || valuesInput.index === ""}
+          disabled={
+            isDisabled.removeByIndexBtn ||
+            valuesInput.index === "" ||
+            Number(valuesInput.index) > linkedList.length - 1 ||
+            Number(valuesInput.index) < 0
+          }
           isLoader={isLoading.removeByIndexBtn}
           onClick={removeByIndex}
         />
