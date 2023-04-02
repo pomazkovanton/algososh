@@ -3,13 +3,17 @@ interface IQueue<T> {
   dequeue(): void;
   clear(): void;
   getElements(): (T | null)[];
+  getHead(): number;
+  getTail(): number;
+  isEmpty(): boolean;
 }
 
 export class Queue<T> implements IQueue<T> {
-  container: (T | null)[] = [];
-  head: number = 0;
-  tail: number = 0;
-  size: number = 0;
+  private container: (T | null)[] = [];
+  private head: number = 0;
+  private tail: number = 0;
+  private size: number = 0;
+  private length: number = 0;
 
   constructor(size: number) {
     this.size = size;
@@ -19,21 +23,28 @@ export class Queue<T> implements IQueue<T> {
   enqueue = (item: T) => {
     this.container[this.tail] = item;
     this.tail++;
+    this.length++;
   };
 
   dequeue = () => {
     this.head++;
     const prev = this.head - 1;
     this.container[prev] = null;
+    this.length--;
   };
 
   clear = () => {
     this.head = 0;
     this.tail = 0;
+    this.length = 0;
     this.container = new Array(this.size).fill(null);
   };
 
-  getElements = () => {
-    return this.container;
-  };
+  getElements = () => this.container;
+
+  getHead = () => this.head;
+
+  getTail = () => this.tail;
+
+  isEmpty = () => this.length === 0;
 }

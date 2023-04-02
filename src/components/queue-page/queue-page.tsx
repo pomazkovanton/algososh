@@ -32,8 +32,12 @@ export const QueuePage: React.FC = () => {
 
   useEffect(() => {
     queue.current = new Queue<string>(7);
-    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
+    setQueueState(getDataQueue(queue));
   }, []);
+
+  const getDataQueue = (queue: MutableRefObject<Queue<string>>): TQueue => {
+    return { items: queue.current.getElements(), head: queue.current.getHead(), tail: queue.current.getTail() };
+  };
 
   const changeColorCircle = async (ms: number) => {
     setColorCircle(ElementStates.Changing);
@@ -48,7 +52,7 @@ export const QueuePage: React.FC = () => {
     setIsDisabled({ ...isDisabled, deleteBtn: true, clearBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
     queue.current.enqueue(item);
-    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
+    setQueueState(getDataQueue(queue));
     setValueInput("");
     setIsLoading({ ...isLoading, addBtn: false });
     setIsDisabled({ ...isDisabled, deleteBtn: false, clearBtn: false });
@@ -61,7 +65,7 @@ export const QueuePage: React.FC = () => {
     setIsDisabled({ ...isDisabled, addBtn: true, clearBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
     queue.current.dequeue();
-    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
+    setQueueState(getDataQueue(queue));
     setIsLoading({ ...isLoading, deleteBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, clearBtn: false });
     setStatus(null);
@@ -73,7 +77,7 @@ export const QueuePage: React.FC = () => {
     setIsDisabled({ ...isDisabled, addBtn: true, deleteBtn: true });
     await changeColorCircle(SHORT_DELAY_IN_MS);
     queue.current.clear();
-    setQueueState({ items: queue.current.getElements(), head: queue.current.head, tail: queue.current.tail });
+    setQueueState(getDataQueue(queue));
     setIsLoading({ ...isLoading, clearBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, deleteBtn: false });
     setStatus(null);
