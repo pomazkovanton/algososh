@@ -4,6 +4,7 @@ import cls from "./queue-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { HEAD, TAIL } from "../../constants/element-captions";
+import { useForm } from "../../hooks/useForm";
 import { ElementStates } from "../../types/element-states";
 import { TQueue, TQueueStatus } from "../../types/utils";
 import { Queue } from "../../utils/queue";
@@ -14,7 +15,7 @@ import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const QueuePage: React.FC = () => {
-  const [valueInput, setValueInput] = useState<string>("");
+  const { values, handleChange, setValues } = useForm({ data: "" });
   const [queueState, setQueueState] = useState<TQueue>({ items: [], tail: 0, head: 0 });
   const [isLoading, setIsLoading] = useState({
     addBtn: false,
@@ -53,7 +54,7 @@ export const QueuePage: React.FC = () => {
     await changeColorCircle(SHORT_DELAY_IN_MS);
     queue.current.enqueue(item);
     setQueueState(getDataQueue(queue));
-    setValueInput("");
+    setValues({ data: "" });
     setIsLoading({ ...isLoading, addBtn: false });
     setIsDisabled({ ...isDisabled, deleteBtn: false, clearBtn: false });
     setStatus(null);
@@ -86,13 +87,13 @@ export const QueuePage: React.FC = () => {
   return (
     <SolutionLayout title='Очередь'>
       <div className={cls.header}>
-        <form className={cls.form} onSubmit={(e) => enqueue(e, valueInput)}>
-          <Input maxLength={4} isLimitText value={valueInput} onChange={(e) => setValueInput(e.currentTarget.value)} />
+        <form className={cls.form} onSubmit={(e) => enqueue(e, values.data)}>
+          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' />
           <Button
             text='Добавить'
             type='submit'
             isLoader={isLoading.addBtn}
-            disabled={valueInput === "" || queueState.tail >= 7 || isDisabled.addBtn}
+            disabled={values.data === "" || queueState.tail >= 7 || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
           />
         </form>

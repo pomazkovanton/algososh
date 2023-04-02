@@ -4,6 +4,7 @@ import cls from "./list-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { HEAD, TAIL } from "../../constants/element-captions";
+import { useForm } from "../../hooks/useForm";
 import { ElementStates } from "../../types/element-states";
 import { TListStatus } from "../../types/utils";
 import { LinkedList } from "../../utils/linked-list";
@@ -16,8 +17,13 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 const initValueList = ["0", "34", "8", "1"];
 
+type TInputsData = {
+  data: string;
+  index: string;
+};
+
 export const ListPage: React.FC = () => {
-  const [valuesInput, setValuesInput] = useState({ data: "", index: "" });
+  const { values, handleChange, setValues } = useForm<TInputsData>({ data: "", index: "" });
   const [linkedList, setLinkedList] = useState<string[]>([]);
   const [status, setStatus] = useState<TListStatus>(null);
   const [stepProgress, setStepProgress] = useState(-1);
@@ -79,10 +85,10 @@ export const ListPage: React.FC = () => {
     setStatus("add-in-head");
     await delay(SHORT_DELAY_IN_MS);
     setStatus(null);
-    list.current.prepend(valuesInput.data);
+    list.current.prepend(values.data);
     setLinkedList(getValuesList(list));
     await changeColorCircle(SHORT_DELAY_IN_MS, HEAD);
-    setValuesInput({ index: "", data: "" });
+    setValues({ index: "", data: "" });
     setIsLoading({ ...isLoading, addInHeadBtn: false });
     setIsDisabled({
       ...isDisabled,
@@ -109,10 +115,10 @@ export const ListPage: React.FC = () => {
     setStatus("add-in-tail");
     await delay(SHORT_DELAY_IN_MS);
     setStatus(null);
-    list.current.append(valuesInput.data);
+    list.current.append(values.data);
     setLinkedList(getValuesList(list));
     await changeColorCircle(SHORT_DELAY_IN_MS, TAIL);
-    setValuesInput({ ...valuesInput, data: "" });
+    setValues({ ...values, data: "" });
     setIsLoading({ ...isLoading, addInTailBtn: false });
     setIsDisabled({
       ...isDisabled,
@@ -177,11 +183,11 @@ export const ListPage: React.FC = () => {
   };
 
   const addByIndex = async () => {
-    if (list.current.getSize() <= Number(valuesInput.index)) {
-      setValuesInput({ ...valuesInput, index: "" });
+    if (list.current.getSize() <= Number(values.index)) {
+      setValues({ ...values, index: "" });
       return alert("Такого индекса нет в списке");
     }
-    if (Number(valuesInput.index) === 0) return addToHead();
+    if (Number(values.index) === 0) return addToHead();
     setIsLoading({ ...isLoading, addByIndexBtn: true });
     setIsDisabled({
       ...isDisabled,
@@ -194,10 +200,10 @@ export const ListPage: React.FC = () => {
     setStatus("add-by-index");
     await renderProgress();
     setStatus(null);
-    list.current.insertInPosition(Number(valuesInput.index), valuesInput.data);
+    list.current.insertInPosition(Number(values.index), values.data);
     setLinkedList(getValuesList(list));
     await changeColorCircle(SHORT_DELAY_IN_MS, "byPosition");
-    setValuesInput({ index: "", data: "" });
+    setValues({ index: "", data: "" });
     setStepProgress(-1);
     setIsLoading({ ...isLoading, addByIndexBtn: false });
     setIsDisabled({
@@ -211,8 +217,8 @@ export const ListPage: React.FC = () => {
   };
 
   const removeByIndex = async () => {
-    if (list.current.getSize() <= Number(valuesInput.index)) {
-      setValuesInput({ ...valuesInput, index: "" });
+    if (list.current.getSize() <= Number(values.index)) {
+      setValues({ ...values, index: "" });
       return alert("Такого индекса нет в списке");
     }
     setIsLoading({ ...isLoading, removeByIndexBtn: true });
@@ -229,10 +235,10 @@ export const ListPage: React.FC = () => {
     setIsRemoved(true);
     await delay(SHORT_DELAY_IN_MS);
     setIsRemoved(false);
-    list.current.removeByPosition(Number(valuesInput.index));
+    list.current.removeByPosition(Number(values.index));
     setLinkedList(getValuesList(list));
     setStatus(null);
-    setValuesInput({ ...valuesInput, index: "" });
+    setValues({ ...values, index: "" });
     setStepProgress(-1);
     setIsLoading({ ...isLoading, removeByIndexBtn: false });
     setIsDisabled({
@@ -247,7 +253,7 @@ export const ListPage: React.FC = () => {
 
   const renderProgress = async () => {
     let step = -1;
-    while (step < +valuesInput.index) {
+    while (step < +values.index) {
       await delay(SHORT_DELAY_IN_MS);
       step++;
       setStepProgress(step);
@@ -255,7 +261,7 @@ export const ListPage: React.FC = () => {
   };
 
   const headRenderingCondition = (indexItem: number, status: TListStatus) => {
-    const CIRCLE = <Circle isSmall={true} letter={valuesInput.data} state={ElementStates.Changing} />;
+    const CIRCLE = <Circle isSmall={true} letter={values.data} state={ElementStates.Changing} />;
     switch (status) {
       case "add-in-head":
         if (list.current.getSize() <= 1) return CIRCLE;
@@ -289,7 +295,7 @@ export const ListPage: React.FC = () => {
         if (indexItem === linkedList.length - 1) return CIRCLE;
         break;
       case "remove-by-index":
-        if (indexItem === Number(valuesInput.index) && isRemoved) return CIRCLE;
+        if (indexItem === Number(values.index) && isRemoved) return CIRCLE;
         if (indexItem === linkedList.length - 1) return TAIL;
         break;
       default:
@@ -307,7 +313,7 @@ export const ListPage: React.FC = () => {
         if (indexItem === linkedList.length - 1) return "";
         return el;
       case "remove-by-index":
-        if (indexItem === Number(valuesInput.index) && isRemoved) return "";
+        if (indexItem === Number(values.index) && isRemoved) return "";
         return el;
       default:
         return el;
@@ -338,20 +344,21 @@ export const ListPage: React.FC = () => {
           isLimitText
           placeholder={"Введите значение"}
           style={{ minWidth: "204px" }}
-          value={valuesInput.data}
-          onChange={(e) => setValuesInput({ ...valuesInput, data: e.currentTarget.value })}
+          value={values.data}
+          onChange={handleChange}
+          name='data'
         />
         <Button
           text='Добавить в head'
           style={{ minWidth: "175px" }}
-          disabled={isDisabled.addInHeadBtn || valuesInput.data === ""}
+          disabled={isDisabled.addInHeadBtn || values.data === ""}
           isLoader={isLoading.addInHeadBtn}
           onClick={addToHead}
         />
         <Button
           text='Добавить в tail'
           style={{ minWidth: "175px" }}
-          disabled={isDisabled.addInTailBtn || valuesInput.data === ""}
+          disabled={isDisabled.addInTailBtn || values.data === ""}
           isLoader={isLoading.addInTailBtn}
           onClick={addToTail}
         />
@@ -374,20 +381,21 @@ export const ListPage: React.FC = () => {
           max={10}
           maxLength={2}
           type='number'
-          value={valuesInput.index}
+          value={values.index}
           style={{ minWidth: "204px" }}
           placeholder={"Введите индекс"}
-          onChange={(e) => setValuesInput({ ...valuesInput, index: e.currentTarget.value })}
+          onChange={handleChange}
+          name='index'
         />
         <Button
           text='Добавить по индексу'
           style={{ minWidth: "362px" }}
           disabled={
             isDisabled.addByIndexBtn ||
-            valuesInput.data === "" ||
-            valuesInput.index === "" ||
-            Number(valuesInput.index) > linkedList.length - 1 ||
-            Number(valuesInput.index) < 0
+            values.data === "" ||
+            values.index === "" ||
+            Number(values.index) > linkedList.length - 1 ||
+            Number(values.index) < 0
           }
           isLoader={isLoading.addByIndexBtn}
           onClick={addByIndex}
@@ -397,9 +405,9 @@ export const ListPage: React.FC = () => {
           style={{ minWidth: "362px" }}
           disabled={
             isDisabled.removeByIndexBtn ||
-            valuesInput.index === "" ||
-            Number(valuesInput.index) > linkedList.length - 1 ||
-            Number(valuesInput.index) < 0
+            values.index === "" ||
+            Number(values.index) > linkedList.length - 1 ||
+            Number(values.index) < 0
           }
           isLoader={isLoading.removeByIndexBtn}
           onClick={removeByIndex}

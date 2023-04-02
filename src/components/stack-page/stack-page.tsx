@@ -3,6 +3,7 @@ import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import cls from "./stack-page.module.css";
 
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { useForm } from "../../hooks/useForm";
 import { ElementStates } from "../../types/element-states";
 import { Stack } from "../../utils/stack";
 import { delay } from "../../utils/utils";
@@ -12,7 +13,7 @@ import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const StackPage: React.FC = () => {
-  const [valueInput, setValueInput] = useState<string>("");
+  const { values, handleChange, setValues } = useForm({ data: "" });
   const [stackState, setStackState] = useState<string[]>([]);
   const [colorCircle, setColorCircle] = useState(ElementStates.Default);
   const [isClearStack, setIsClearStack] = useState(false);
@@ -43,7 +44,7 @@ export const StackPage: React.FC = () => {
     setColorCircle(ElementStates.Changing);
     stack.current.push(item);
     setStackState(stack.current.getElements());
-    setValueInput("");
+    setValues({ data: "" });
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
     setIsLoading({ ...isLoading, addBtn: false });
@@ -79,13 +80,13 @@ export const StackPage: React.FC = () => {
   return (
     <SolutionLayout title='Стек'>
       <div className={cls.header}>
-        <form className={cls.form} onSubmit={(e) => pushStack(e, valueInput)}>
-          <Input maxLength={4} isLimitText value={valueInput} onChange={(e) => setValueInput(e.currentTarget.value)} />
+        <form className={cls.form} onSubmit={(e) => pushStack(e, values.data)}>
+          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' />
           <Button
             text='Добавить'
             type='submit'
             isLoader={isLoading.addBtn}
-            disabled={valueInput === "" || isDisabled.addBtn}
+            disabled={values.data === "" || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
           />
         </form>

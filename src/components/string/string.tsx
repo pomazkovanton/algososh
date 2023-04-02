@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import cls from "./string.module.css";
 
 import { DELAY_IN_MS, SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { useForm } from "../../hooks/useForm";
 import { ElementStates } from "../../types/element-states";
 import { delay } from "../../utils/utils";
 import { Button } from "../ui/button/button";
@@ -11,12 +12,12 @@ import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 export const StringComponent: React.FC = () => {
-  const [valueInput, setValueInput] = useState<string>("");
   const [arrChars, setArrChars] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isReverse, setIsReverse] = useState(false);
   const [startIndex, setStarIndex] = useState(-1);
   const [endIndex, setEndIndex] = useState(12);
+  const { values, handleChange, setValues } = useForm({ data: "" });
 
   const reverseString = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export const StringComponent: React.FC = () => {
     setIsReverse(false);
     setIsLoading(true);
 
-    const tempArray = valueInput.split("");
+    const tempArray = values.data.split("");
     const lengthArray = tempArray.length;
     await delay(SHORT_DELAY_IN_MS);
 
@@ -46,7 +47,7 @@ export const StringComponent: React.FC = () => {
     setStarIndex(-1);
     setEndIndex(12);
     setArrChars(tempArray);
-    setValueInput("");
+    setValues({ data: "" });
     setIsLoading(false);
     setIsReverse(true);
   };
@@ -54,16 +55,11 @@ export const StringComponent: React.FC = () => {
   return (
     <SolutionLayout title='Строка'>
       <form className={cls.form} onSubmit={(e) => reverseString(e)}>
-        <Input
-          maxLength={11}
-          isLimitText={true}
-          value={valueInput}
-          onChange={(e) => setValueInput(e.currentTarget.value)}
-        />
+        <Input maxLength={11} isLimitText={true} value={values.data} onChange={handleChange} name='data' />
         <Button
           text='Развернуть'
           type='submit'
-          disabled={!valueInput}
+          disabled={!values.data}
           isLoader={isLoading}
           style={{ minWidth: "178px" }}
         />
