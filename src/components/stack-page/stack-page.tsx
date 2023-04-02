@@ -30,7 +30,7 @@ export const StackPage: React.FC = () => {
 
   useEffect(() => {
     stack.current = new Stack<string>();
-    setStackState(stack.current.container);
+    setStackState(stack.current.getElements());
   }, []);
 
   const pushStack = async (e: React.FormEvent<HTMLFormElement>, item: string) => {
@@ -42,7 +42,7 @@ export const StackPage: React.FC = () => {
     setIsDisabled({ ...isDisabled, deleteBtn: true, clearBtn: true });
     setColorCircle(ElementStates.Changing);
     stack.current.push(item);
-    setStackState(stack.current.container);
+    setStackState(stack.current.getElements());
     setValueInput("");
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
@@ -57,7 +57,7 @@ export const StackPage: React.FC = () => {
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
     stack.current.pop();
-    setStackState(stack.current.container);
+    setStackState(stack.current.getElements());
     setIsLoading({ ...isLoading, deleteBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, clearBtn: false });
   };
@@ -70,7 +70,7 @@ export const StackPage: React.FC = () => {
     await delay(SHORT_DELAY_IN_MS);
     setColorCircle(ElementStates.Default);
     stack.current.clear();
-    setStackState(stack.current.container);
+    setStackState(stack.current.getElements());
     setIsClearStack(false);
     setIsLoading({ ...isLoading, clearBtn: false });
     setIsDisabled({ ...isDisabled, addBtn: false, deleteBtn: false });
