@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+
+  max-width: 830px;
+  margin: auto;
+}
+
+.form {
+  display: flex;
+  flex: 1;
+  gap: 12px;
+  justify-content: space-between;
+
+  max-width: 510px;
+}
+
+.list {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+
+  max-width: 307px;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.queue {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 656px;
+  margin: 80px auto 0;
+  padding: 0;
+
+  list-style: none;
+}

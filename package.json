@@ -2,6 +2,7 @@
   "name": "algorithms-project",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://pomazkovanton.github.io/algososh",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
@@ -23,7 +24,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "format": "npx prettier src --check",
+    "format:fix": "npm run format -- --write",
+    "lint:es": "eslint --ext .js,.jsx,.ts,.tsx src",
+    "lint:es:fix": "npm run lint:es -- --fix",
+    "lint:css": "stylelint src/**/*.css",
+    "lint:css:fix": "npm run lint:css -- --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +53,18 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.3"
+    "@types/react-router-dom": "^5.3.3",
+    "gh-pages": "^5.0.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "stylelint": "^14.16.1",
+    "stylelint-config-clean-order": "^2.3.0",
+    "stylelint-config-prettier": "^9.0.4",
+    "stylelint-config-standard-scss": "^6.1.0",
+    "typescript-plugin-css-modules": "^4.1.1"
   }
 }

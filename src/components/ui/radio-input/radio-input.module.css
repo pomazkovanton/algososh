@@ -4,14 +4,18 @@
 }
 
 .label {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  user-select: none;
   cursor: pointer;
+  user-select: none;
+
+  position: relative;
+
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+
   margin-left: 30px;
+
   transition: var(--common-transition);
 }
 
@@ -19,24 +23,28 @@
 .label::after {
   content: "";
   position: absolute;
-  transition: color, background-color 0.3s linear;
   margin: 0;
+  transition: color, background-color 0.3s linear;
 }
 
 .label::before {
+  left: -30px;
+
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+
   border: 2px solid #000;
-  left: -30px;
+  border-radius: 50%;
 }
 
 input:checked + .label::after {
+  left: -22px;
+
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+
   background-color: #000;
-  left: -22px;
+  border-radius: 50%;
 }
 
 .input:hover + .label::before {

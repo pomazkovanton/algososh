@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+
+  max-width: 980px;
+  margin: 48px auto 0;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.list-radio {
+  width: 221px;
+}
+
+.list-button {
+  width: 707px;
+}
+
+.main {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  justify-content: center;
+
+  max-width: 1010px;
+  min-height: 340px;
+  margin: 50px auto 0;
+}

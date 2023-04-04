@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-content: space-between;
+
+  max-width: 952px;
+  max-height: 158px;
+  margin: auto;
+}
+
+.header div {
+  flex: 1;
+}
+
+.list {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+
+  max-width: 952px;
+  margin: 120px auto 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}

@@ -1,11 +1,13 @@
 .content {
-  background-image: url("../../../images/bg.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  min-height: 100vh;
+
+  background-image: url("../../../images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .titleBox {
@@ -18,12 +20,13 @@
 }
 
 .contentCard {
-  background: #ffffff;
-  border-radius: 20px;
+  box-sizing: border-box;
+  height: 693px;
   margin: 31px 20px 28px;
   padding: 36px;
-  height: 693px;
-  box-sizing: border-box;
+
+  background: #fff;
+  border-radius: 20px;
 }
 
 .returnButton {
@@ -35,10 +38,10 @@
 }
 
 .copyright {
-  margin: 0 20px 0 auto;
-  text-align: right;
-  padding-bottom: 36px;
   max-width: 1240px;
+  margin: 0 20px 0 auto;
+  padding-bottom: 36px;
+  text-align: right;
 }
 
 .link {

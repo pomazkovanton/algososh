@@ -24,23 +24,15 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...rest
 }) => {
-  const currentIcon =
-    sorting === Direction.Ascending ? <AscendingIcon /> : <DescendingIcon />;
-  const className = `text text_type_button text_color_primary ${
-    styles.button
-  } ${linkedList && styles[linkedList]} ${
+  const currentIcon = sorting === Direction.Ascending ? <AscendingIcon /> : <DescendingIcon />;
+  const className = `text text_type_button text_color_primary ${styles.button} ${linkedList && styles[linkedList]} ${
     isLoader && styles.loader
   } ${extraClass}`;
 
   return (
-    <button
-      className={className}
-      type={type}
-      disabled={isLoader || disabled}
-      {...rest}
-    >
+    <button className={className} type={type} disabled={isLoader || disabled} {...rest}>
       {isLoader ? (
-        <img className={styles.loader_icon} src={loaderIcon} alt="Загрузка." />
+        <img className={styles.loader_icon} src={loaderIcon} alt='Загрузка.' />
       ) : (
         <>
           {sorting && currentIcon}
