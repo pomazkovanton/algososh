@@ -55,7 +55,14 @@ export const StringComponent: React.FC = () => {
   return (
     <SolutionLayout title='Строка'>
       <form className={cls.form} onSubmit={(e) => reverseString(e)}>
-        <Input maxLength={11} isLimitText={true} value={values.data} onChange={handleChange} name='data' />
+        <Input
+          maxLength={11}
+          isLimitText={true}
+          value={values.data}
+          onChange={handleChange}
+          name='data'
+          data-cy='input-string'
+        />
         <Button
           text='Развернуть'
           type='submit'
