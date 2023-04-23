@@ -1,13 +1,14 @@
 import {
   STRING_TEST_START,
-  DELAY_IN_MS,
+  DELAY_IN_MS_X1,
   BORDER_COLOR_CHANGING,
   BORDER_COLOR_DEFAULT,
   BORDER_COLOR_MODIFIED,
   STRING_TEST_MIDLE,
   STRING_TEST_END,
   INPUT_SELECTOR,
-  BUTTON_SELECTOR
+  BUTTON_SELECTOR,
+  CIRCLE_SELECTOR
 } from "../utils/constants";
 
 describe("Строка", function () {
@@ -25,7 +26,7 @@ describe("Строка", function () {
   it("строка разворачивается коректно", function () {
     cy.get("@input").type(STRING_TEST_START);
     cy.get("@button").click();
-    cy.get('[data-cy="circle-main"]').as("circle");
+    cy.get(CIRCLE_SELECTOR).as("circle");
     cy.get("@circle")
       .should("have.length", 5)
       .each(($el, index) => {
@@ -38,7 +39,7 @@ describe("Строка", function () {
         }
       });
 
-    cy.wait(DELAY_IN_MS);
+    cy.wait(DELAY_IN_MS_X1);
 
     cy.get("@circle")
       .should("have.length", 5)
@@ -53,7 +54,7 @@ describe("Строка", function () {
         }
       });
 
-    cy.wait(DELAY_IN_MS);
+    cy.wait(DELAY_IN_MS_X1);
 
     cy.get("@circle")
       .should("have.length", 5)
