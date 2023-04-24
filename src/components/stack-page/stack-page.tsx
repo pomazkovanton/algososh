@@ -81,13 +81,14 @@ export const StackPage: React.FC = () => {
     <SolutionLayout title='Стек'>
       <div className={cls.header}>
         <form className={cls.form} onSubmit={(e) => pushStack(e, values.data)}>
-          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' />
+          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' data-cy='input' />
           <Button
             text='Добавить'
             type='submit'
             isLoader={isLoading.addBtn}
             disabled={values.data === "" || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
+            data-cy='button-add'
           />
         </form>
         <ul className={cls.list}>
@@ -98,6 +99,7 @@ export const StackPage: React.FC = () => {
               isLoader={isLoading.deleteBtn}
               onClick={popStack}
               disabled={stackState.length === 0 || isDisabled.deleteBtn}
+              data-cy='button-del'
             />
           </li>
           <li>
@@ -107,6 +109,7 @@ export const StackPage: React.FC = () => {
               isLoader={isLoading.clearBtn}
               onClick={clearStack}
               disabled={stackState.length === 0 || isDisabled.clearBtn}
+              data-cy='button-clear'
             />
           </li>
         </ul>

@@ -11,6 +11,10 @@ export const STRING_TEST_END = "54321";
 
 export const INPUT_SELECTOR = '[data-cy="input"]';
 export const BUTTON_SELECTOR = '[data-cy="button"]';
+export const BUTTON_ADD_SELECTOR = '[data-cy="button-add"]';
+export const BUTTON_DELETE_SELECTOR = '[data-cy="button-del"]';
+export const BUTTON_CLEAR_SELECTOR = '[data-cy="button-clear"]';
 export const CIRCLE_SELECTOR = '[data-cy="circle-main"]';
 
 export const FIBONACCI_SERIES = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
+export const STACK_NUMBERS = [0, 1, 3, 4, 5];
