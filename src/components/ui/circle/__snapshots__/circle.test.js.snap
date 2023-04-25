@@ -11,6 +11,7 @@ exports[`Компонент <Circle /> отрисовывается c head 1`] =
   </div>
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -34,6 +35,7 @@ exports[`Компонент <Circle /> отрисовывается c index 1`] 
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -65,6 +67,7 @@ exports[`Компонент <Circle /> отрисовывается c react-эл
       />
       <div
         className="circle   default"
+        data-cy="circle-main"
       >
         <p
           className="text text_type_circle text_color_input letter"
@@ -80,6 +83,7 @@ exports[`Компонент <Circle /> отрисовывается c react-эл
   </div>
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -103,6 +107,7 @@ exports[`Компонент <Circle /> отрисовывается c react-эл
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -122,6 +127,7 @@ exports[`Компонент <Circle /> отрисовывается c react-эл
       />
       <div
         className="circle   default"
+        data-cy="circle-main"
       >
         <p
           className="text text_type_circle text_color_input letter"
@@ -147,6 +153,7 @@ exports[`Компонент <Circle /> отрисовывается c tail 1`] =
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -172,6 +179,7 @@ exports[`Компонент <Circle /> отрисовывается c буква
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -197,6 +205,7 @@ exports[`Компонент <Circle /> отрисовывается без бу�
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -220,6 +229,7 @@ exports[`Компонент <Circle /> отрисовывается в сост�
   />
   <div
     className="circle   changing"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -243,6 +253,7 @@ exports[`Компонент <Circle /> отрисовывается в сост�
   />
   <div
     className="circle   default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -266,6 +277,7 @@ exports[`Компонент <Circle /> отрисовывается в сост�
   />
   <div
     className="circle   modified"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
@@ -289,6 +301,7 @@ exports[`Компонент <Circle /> отрисовывается с проп�
   />
   <div
     className="circle  small default"
+    data-cy="circle-main"
   >
     <p
       className="text text_type_circle text_color_input letter"
