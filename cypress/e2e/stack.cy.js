@@ -1,5 +1,5 @@
 import {
-  STACK_NUMBERS,
+  TEST_NUMBERS_ARRAY,
   INPUT_SELECTOR,
   BUTTON_ADD_SELECTOR,
   BUTTON_DELETE_SELECTOR,
@@ -34,21 +34,21 @@ describe("Стек", function () {
   });
 
   it("элемент правильно добавляется в стек", function () {
-    STACK_NUMBERS.forEach((el) => pushStack(el));
+    TEST_NUMBERS_ARRAY.forEach((el) => pushStack(el));
   });
 
   it("элемент корректно удаляется  из стека", function () {
-    STACK_NUMBERS.forEach((el) => pushStack(el));
+    TEST_NUMBERS_ARRAY.forEach((el) => pushStack(el));
     cy.get("@button-del").click();
     cy.get(CIRCLE_SELECTOR).last().as("last-circle");
     cy.get(CIRCLE_SELECTOR).as("circles");
     cy.get("@last-circle").should("have.css", "border-color", BORDER_COLOR_CHANGING);
     cy.get("@last-circle").prev().contains("top");
-    cy.get("@circles").should("have.length", STACK_NUMBERS.length - 1);
+    cy.get("@circles").should("have.length", TEST_NUMBERS_ARRAY.length - 1);
   });
 
   it("очитска стека работает корректно", function () {
-    STACK_NUMBERS.forEach((el) => pushStack(el));
+    TEST_NUMBERS_ARRAY.forEach((el) => pushStack(el));
     cy.get("@button-clear").click();
     cy.get(CIRCLE_SELECTOR).should("have.length", 0);
     cy.get("@button-add").should("be.disabled");

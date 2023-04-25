@@ -88,13 +88,14 @@ export const QueuePage: React.FC = () => {
     <SolutionLayout title='Очередь'>
       <div className={cls.header}>
         <form className={cls.form} onSubmit={(e) => enqueue(e, values.data)}>
-          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' />
+          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' data-cy='input' />
           <Button
             text='Добавить'
             type='submit'
             isLoader={isLoading.addBtn}
             disabled={values.data === "" || queueState.tail >= 7 || isDisabled.addBtn}
             style={{ minWidth: "120px" }}
+            data-cy='button-add'
           />
         </form>
         <ul className={cls.list}>
@@ -110,6 +111,7 @@ export const QueuePage: React.FC = () => {
                 queueState.head > 6 ||
                 queueState.items[queueState.head] === null
               }
+              data-cy='button-del'
             />
           </li>
           <li>
@@ -119,6 +121,7 @@ export const QueuePage: React.FC = () => {
               isLoader={isLoading.clearBtn}
               onClick={clear}
               disabled={isDisabled.clearBtn || queueState.tail === 0}
+              data-cy='button-clear'
             />
           </li>
         </ul>
