@@ -1,9 +1,9 @@
-import { FIBONACCI_SERIES, INPUT_SELECTOR, BUTTON_SELECTOR, CIRCLE_SELECTOR, DELAY_IN_MS_X12 } from "../utils/constants";
+import { FIBONACCI_SERIES, INPUT_VALUE_SELECTOR, BUTTON_SELECTOR, CIRCLE_SELECTOR, DELAY_IN_MS_X12 } from "../utils/constants";
 
 describe("Последовательность Фибоначчи", function () {
   beforeEach(function () {
     cy.visit("#fibonacci");
-    cy.get(INPUT_SELECTOR).as("input");
+    cy.get(INPUT_VALUE_SELECTOR).as("input");
     cy.get(BUTTON_SELECTOR).as("button");
   });
 

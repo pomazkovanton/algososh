@@ -10,7 +10,7 @@ export const STRING_TEST_START = "12345";
 export const STRING_TEST_MIDLE = "52341";
 export const STRING_TEST_END = "54321";
 
-export const INPUT_SELECTOR = '[data-cy="input"]';
+export const INPUT_VALUE_SELECTOR = '[data-cy="input-value"]';
 export const BUTTON_SELECTOR = '[data-cy="button"]';
 export const BUTTON_ADD_SELECTOR = '[data-cy="button-add"]';
 export const BUTTON_DELETE_SELECTOR = '[data-cy="button-del"]';

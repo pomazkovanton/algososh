@@ -81,7 +81,14 @@ export const StackPage: React.FC = () => {
     <SolutionLayout title='Стек'>
       <div className={cls.header}>
         <form className={cls.form} onSubmit={(e) => pushStack(e, values.data)}>
-          <Input maxLength={4} isLimitText value={values.data} onChange={handleChange} name='data' data-cy='input' />
+          <Input
+            maxLength={4}
+            isLimitText
+            value={values.data}
+            onChange={handleChange}
+            name='data'
+            data-cy='input-value'
+          />
           <Button
             text='Добавить'
             type='submit'

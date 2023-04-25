@@ -1,6 +1,6 @@
 import {
   TEST_NUMBERS_ARRAY,
-  INPUT_SELECTOR,
+  INPUT_VALUE_SELECTOR,
   BUTTON_ADD_SELECTOR,
   BUTTON_DELETE_SELECTOR,
   BUTTON_CLEAR_SELECTOR,
@@ -22,7 +22,7 @@ describe("Стек", function () {
 
   beforeEach(function () {
     cy.visit("#stack");
-    cy.get(INPUT_SELECTOR).as("input");
+    cy.get(INPUT_VALUE_SELECTOR).as("input");
     cy.get(BUTTON_ADD_SELECTOR).as("button-add");
     cy.get(BUTTON_DELETE_SELECTOR).as("button-del");
     cy.get(BUTTON_CLEAR_SELECTOR).as("button-clear");

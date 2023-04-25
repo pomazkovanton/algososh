@@ -61,7 +61,7 @@ export const StringComponent: React.FC = () => {
           value={values.data}
           onChange={handleChange}
           name='data'
-          data-cy='input'
+          data-cy='input-value'
         />
         <Button
           text='Развернуть'

@@ -6,7 +6,7 @@ import {
   BORDER_COLOR_MODIFIED,
   STRING_TEST_MIDLE,
   STRING_TEST_END,
-  INPUT_SELECTOR,
+  INPUT_VALUE_SELECTOR,
   BUTTON_SELECTOR,
   CIRCLE_SELECTOR
 } from "../utils/constants";
@@ -14,7 +14,7 @@ import {
 describe("Строка", function () {
   beforeEach(function () {
     cy.visit("#recursion");
-    cy.get(INPUT_SELECTOR).as("input");
+    cy.get(INPUT_VALUE_SELECTOR).as("input");
     cy.get(BUTTON_SELECTOR).as("button");
   });
 

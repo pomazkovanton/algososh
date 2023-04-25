@@ -48,7 +48,7 @@ export const FibonacciPage: React.FC = () => {
           name='data'
           value={values.data}
           onChange={handleChange}
-          data-cy='input'
+          data-cy='input-value'
         />
         <Button
           text='Рассчитать'
