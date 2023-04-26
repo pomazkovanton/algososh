@@ -31,7 +31,7 @@ export const Circle: React.FC<CircleProps> = ({
       >
         {head}
       </div>
-      <div className={`${styles.circle}  ${isSmall ? styles.small : ""} ${styles[state]}`}>
+      <div className={`${styles.circle}  ${isSmall ? styles.small : ""} ${styles[state]}`} data-cy='circle-main'>
         <p className={`text text_type_circle text_color_input ${styles.letter}`}>{letter}</p>
       </div>
       <p className={`text text_type_input text_color_input mt-4 ${styles.absolute} ${styles.index}`}>

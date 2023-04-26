@@ -347,6 +347,7 @@ export const ListPage: React.FC = () => {
           value={values.data}
           onChange={handleChange}
           name='data'
+          data-cy='input-value'
         />
         <Button
           text='Добавить в head'
@@ -354,6 +355,7 @@ export const ListPage: React.FC = () => {
           disabled={isDisabled.addInHeadBtn || values.data === ""}
           isLoader={isLoading.addInHeadBtn}
           onClick={addToHead}
+          data-cy='button-add-in-head'
         />
         <Button
           text='Добавить в tail'
@@ -361,6 +363,7 @@ export const ListPage: React.FC = () => {
           disabled={isDisabled.addInTailBtn || values.data === ""}
           isLoader={isLoading.addInTailBtn}
           onClick={addToTail}
+          data-cy='button-add-in-tail'
         />
         <Button
           text='Удалить из head'
@@ -368,6 +371,7 @@ export const ListPage: React.FC = () => {
           disabled={isDisabled.removeFromHeadBtn || linkedList.length === 0}
           isLoader={isLoading.removeFromHeadBtn}
           onClick={removeFromHead}
+          data-cy='button-del-from-head'
         />
         <Button
           text='Удалить из tail'
@@ -375,6 +379,7 @@ export const ListPage: React.FC = () => {
           disabled={isDisabled.removeFromTailBtn || linkedList.length === 0}
           isLoader={isLoading.removeFromTailBtn}
           onClick={removeFromTail}
+          data-cy='button-del-from-tail'
         />
         <Input
           min={0}
@@ -386,6 +391,7 @@ export const ListPage: React.FC = () => {
           placeholder={"Введите индекс"}
           onChange={handleChange}
           name='index'
+          data-cy='input-index'
         />
         <Button
           text='Добавить по индексу'
@@ -399,6 +405,7 @@ export const ListPage: React.FC = () => {
           }
           isLoader={isLoading.addByIndexBtn}
           onClick={addByIndex}
+          data-cy='button-add-by-index'
         />
         <Button
           text='Удалить по индексу'
@@ -411,6 +418,7 @@ export const ListPage: React.FC = () => {
           }
           isLoader={isLoading.removeByIndexBtn}
           onClick={removeByIndex}
+          data-cy='button-del-by-index'
         />
       </div>
       <ul className={cls.list}>
